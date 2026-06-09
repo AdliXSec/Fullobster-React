@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Lobster Care Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#4633a0",
+                        "outline": "#737685",
+                        "secondary-fixed-dim": "#c9bfff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#d9dadc",
+                        "surface-tint": "#0c56d0",
+                        "primary": "#003d9b",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dae2ff",
+                        "surface-container-high": "#e7e8ea",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-container-low": "#f3f4f6",
+                        "surface-variant": "#e1e2e4",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#434654",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "on-secondary-container": "#341d8d",
+                        "on-background": "#191c1e",
+                        "secondary": "#5e4db9",
+                        "surface-bright": "#f8f9fb",
+                        "outline-variant": "#c3c6d6",
+                        "on-tertiary-container": "#ffc6b2",
+                        "surface-container-highest": "#e1e2e4",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "background": "#f8f9fb",
+                        "inverse-primary": "#b2c5ff",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary-container": "#a33500",
+                        "inverse-on-surface": "#f0f1f3",
+                        "on-primary-fixed": "#001848",
+                        "tertiary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "tertiary": "#7b2600",
+                        "primary-container": "#0052cc",
+                        "secondary-fixed": "#e5deff",
+                        "surface": "#f8f9fb",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "secondary-container": "#9f8eff",
+                        "surface-container": "#edeef0",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#1a0063"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "20px",
+                        "stack-md": "16px",
+                        "gutter": "16px",
+                        "stack-sm": "8px",
+                        "sidebar-width": "260px",
+                        "sidebar-collapsed-width": "80px",
+                        "container-margin": "24px"
+                    },
+                    "fontFamily": {
+                        "display-metrics": ["Manrope"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Manrope"],
+                        "metric-unit": ["Inter"],
+                        "headline-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "display-metrics": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "metric-unit": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Sidebar transition styles */
+        .sidebar-transition {
+            transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar-text-transition {
+            transition: opacity 0.2s ease-in-out, width 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed #sidebar {
+            width: 80px !important;
+        }
+
+        .sidebar-collapsed #main-wrapper {
+            margin-left: 80px !important;
+        }
+
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .sidebar-collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .sidebar-collapsed .export-text {
+            display: none;
+        }
+
+        .sidebar-collapsed .sidebar-btn-container {
+            justify-content: center;
+            padding: 0;
+        }
+
+        .sidebar-collapsed .sidebar-nav-item {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sidebar-collapsed .logo-container {
+            flex-direction: column;
+            gap: 16px;
+            padding: 0;
+            justify-content: center;
+        }
+
+        /* Flow Animation Styles */
+        .flow-line {
+            stroke-dasharray: 10;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+
+        .data-packet {
+            animation: travel 4s linear infinite;
+            offset-path: path("M0,20 L100,20 L150,20 L250,20 L300,20 L400,20");
+        }
+
+        .data-packet-2 {
+            animation: travel 4s linear infinite;
+            animation-delay: 2s;
+            offset-path: path("M0,20 L100,20 L150,20 L250,20 L300,20 L400,20");
+        }
+
+        @keyframes travel {
+            0% {
+                offset-distance: 0%;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                offset-distance: 100%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse-node {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 82, 204, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 82, 204, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 82, 204, 0);
+            }
+        }
+
+        .node-pulse {
+            animation: pulse-node 4s ease-in-out infinite;
+        }
+
+        .node-pulse-delayed {
+            animation: pulse-node 4s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen sidebar-collapsed">
+    <!-- SideNavBar -->
+    <aside id="sidebar"
+        class="bg-surface-container-lowest w-[sidebar-width] h-screen fixed left-0 top-0 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col py-6 z-50 sidebar-transition">
+        <div class="px-5 mb-8 flex items-center justify-between gap-3 logo-container sidebar-transition">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-3xl flex-shrink-0"
+                    style="font-variation-settings: 'FILL' 1;">water_drop</span>
+                <div class="logo-text sidebar-text-transition whitespace-nowrap">
+                    <h1 class="font-headline-md text-headline-md text-primary">Lobster Care</h1>
+                    <p class="font-label-sm text-label-sm text-outline">Aquaculture IoT</p>
+                </div>
+            </div>
+            <button class="text-outline hover:bg-surface-container-low p-1 rounded-md transition-colors"
+                id="toggle-sidebar" title="Toggle Sidebar">
+                <span class="material-symbols-outlined icon-menu">menu</span>
+            </button>
+        </div>
+
+        <nav class="flex-1 flex flex-col gap-2">
+            <a class="flex items-center gap-3 bg-primary-container text-primary font-bold border-l-4 border-primary transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="dashboard.html">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="dashboard"
+                    style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-all duration-200 ease-in-out px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="history.html">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="history">history</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Riwayat Data</span>
+            </a>
+            <a class="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="report.html">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="assessment">analytics</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Laporan</span>
+            </a>
+            <a class="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="#">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="help">help</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Dukungan</span>
+            </a>
+        </nav>
+        <div class="px-5 mt-auto sidebar-btn-container flex">
+            <button
+                class="w-full py-2 px-4 bg-primary text-on-primary rounded-DEFAULT font-label-sm text-label-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-[18px] flex-shrink-0">download</span>
+                <span class="export-text sidebar-text sidebar-text-transition whitespace-nowrap">Export Laporan</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div id="main-wrapper" class="ml-[sidebar-width] flex flex-col min-h-screen sidebar-transition">
+        <!-- TopAppBar -->
+        <header id="top-bar"
+            class="h-16 sticky top-0 z-40 bg-surface-bright border-b border-outline-variant flex items-center justify-between px-gutter sidebar-transition">
+            <div class="flex items-center gap-4">
+                <span class="text-primary font-headline-md text-headline-md font-semibold">Dashboard</span>
+                <div class="hidden md:flex items-center gap-2 text-primary font-semibold text-sm">
+                    <span class="relative flex h-3 w-3">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                    </span>
+                    Monitoring Active
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden md:block">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                    <input
+                        class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full font-body-md text-body-md focus:ring-2 focus:ring-primary w-64 text-on-surface"
+                        placeholder="Search..." type="text" />
+                </div>
+                <button
+                    class="text-outline hover:text-primary-container transition-colors p-2 rounded-full hover:bg-surface-container-low">
+                    <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                </button>
+                <div
+                    class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold font-body-md shadow-sm border border-outline-variant cursor-pointer ml-2">
+                    LC
+                </div>
+                <button
+                    class="text-outline font-label-sm text-label-sm hover:text-primary transition-colors cursor-pointer active:opacity-80">Logout</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-container-margin flex-1" id="main-content">
+            <div class="mb-stack-md flex items-center justify-between">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface">Real-time Monitoring</h2>
+                <span class="text-outline text-body-md">Terakhir diperbarui: Baru saja</span>
+            </div>
+            <!-- KPI Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-md">
+                <!-- pH Card -->
+                <div
+                    class="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-2 text-outline">
+                            <span class="material-symbols-outlined text-primary">water_drop</span>
+                            <span class="font-body-md">pH Air</span>
+                        </div>
+                        <span
+                            class="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full font-medium">Target
+                            6.5 - 8.5</span>
+                    </div>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">
+                        7.2
+                    </div>
+                    <div class="flex items-center gap-1 text-primary text-sm font-medium">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        <span class="">+0.1 vs 1 jam lalu</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
+                        <div class="h-full bg-primary w-[70%]"></div>
+                    </div>
+                </div>
+                <!-- TDS Card -->
+                <div
+                    class="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-2 text-outline">
+                            <span class="material-symbols-outlined text-secondary">scatter_plot</span>
+                            <span class="font-body-md">TDS (mg/L)</span>
+                        </div>
+                    </div>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">
+                        245
+                    </div>
+                    <div class="flex items-center gap-1 text-secondary text-sm font-medium">
+                        <span class="material-symbols-outlined text-sm">trending_down</span>
+                        <span class="">-5 vs 1 jam lalu</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
+                        <div class="h-full bg-secondary w-[40%]"></div>
+                    </div>
+                </div>
+                <!-- Suhu Card -->
+                <div
+                    class="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-2 text-outline">
+                            <span class="material-symbols-outlined text-tertiary">thermostat</span>
+                            <span class="font-body-md">Suhu (°C)</span>
+                        </div>
+                    </div>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">
+                        28.5
+                    </div>
+                    <div class="flex items-center gap-1 text-outline text-sm font-medium">
+                        <span class="material-symbols-outlined text-sm">trending_flat</span>
+                        <span class="">Stabil</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
+                        <div class="h-full bg-tertiary w-[80%]"></div>
+                    </div>
+                </div>
+                <!-- Oksigen Card -->
+                <div
+                    class="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-2 text-outline">
+                            <span class="material-symbols-outlined text-primary-container">air</span>
+                            <span class="font-body-md">Oksigen Terlarut</span>
+                        </div>
+                        <span class="text-outline text-xs">mg/L</span>
+                    </div>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">
+                        6.8
+                    </div>
+                    <div class="flex items-center gap-1 text-primary-container text-sm font-medium">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        <span class="">+0.2 vs 1 jam lalu</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
+                        <div class="h-full bg-primary-container w-[65%]"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-stack-md">
+                <!-- Classification Result -->
+                <div
+                    class="bg-primary-fixed p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] lg:col-span-1 flex flex-col justify-center">
+                    <h3 class="font-headline-md text-headline-md text-on-primary-fixed mb-4">Hasil Klasifikasi</h3>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-primary text-3xl">check_circle</span>
+                        </div>
+                        <div>
+                            <div class="font-display-metrics text-2xl text-on-primary-fixed mb-1">Kondisi Ideal</div>
+                            <div class="text-on-primary-fixed-variant text-sm">Lingkungan optimal untuk pertumbuhan.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Chart Placeholder (Mockup) -->
+                <div
+                    class="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] lg:col-span-2 flex flex-col">
+                    <!-- Data Flow Animation Container -->
+                    <div
+                        class="mb-6 relative h-24 flex items-center justify-between px-8 bg-surface-container-low rounded-lg overflow-hidden">
+                        <!-- Connecting Line SVG -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                            <line class="text-outline-variant flow-line" stroke="currentColor" stroke-width="2" x1="15%"
+                                x2="50%" y1="50%" y2="50%"></line>
+                            <line class="text-outline-variant flow-line" stroke="currentColor" stroke-width="2" x1="50%"
+                                x2="85%" y1="50%" y2="50%"></line>
+                            <!-- Animated Packets -->
+                            <circle class="text-primary data-packet" fill="currentColor" r="4"></circle>
+                            <circle class="text-secondary data-packet-2" fill="currentColor" r="4"></circle>
+                        </svg>
+                        <!-- Node 1: IoT Device -->
+                        <div
+                            class="flex flex-col items-center gap-2 z-10 node-pulse bg-surface-container-lowest p-2 rounded-lg shadow-sm border border-outline-variant">
+                            <div
+                                class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container">
+                                <span class="material-symbols-outlined">sensors</span>
+                            </div>
+                            <span class="text-label-sm text-on-surface-variant font-semibold">IoT Device</span>
+                        </div>
+                        <!-- Node 2: Python Service -->
+                        <div
+                            class="flex flex-col items-center gap-2 z-10 node-pulse-delayed bg-surface-container-lowest p-2 rounded-lg shadow-sm border border-outline-variant">
+                            <div
+                                class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+                                <span class="material-symbols-outlined">dns</span>
+                            </div>
+                            <span class="text-label-sm text-on-surface-variant font-semibold">Python Service</span>
+                        </div>
+                        <!-- Node 3: User Interface -->
+                        <div
+                            class="flex flex-col items-center gap-2 z-10 node-pulse bg-surface-container-lowest p-2 rounded-lg shadow-sm border border-outline-variant">
+                            <div
+                                class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+                                <span class="material-symbols-outlined">monitor</span>
+                            </div>
+                            <span class="text-label-sm text-on-surface-variant font-semibold">User Interface</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-body-lg text-body-lg text-on-surface font-semibold">Tren Kualitas Air (24 Jam)
+                        </h3>
+                        <button class="text-primary text-sm font-medium hover:underline">Lihat Detail</button>
+                    </div>
+                    <div class="h-48 w-full rounded bg-surface-container flex items-center justify-center text-outline">
+                        [Area Grafik Garis]
+                    </div>
+                </div>
+            </div>
+            <!-- Data Table -->
+            <div class="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Riwayat Data</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant font-label-sm text-outline">
+                                <th class="py-3 px-4 font-semibold">Timestamp</th>
+                                <th class="py-3 px-4 font-semibold">pH Air</th>
+                                <th class="py-3 px-4 font-semibold">TDS (mg/L)</th>
+                                <th class="py-3 px-4 font-semibold">Suhu (°C)</th>
+                                <th class="py-3 px-4 font-semibold">Oksigen (mg/L)</th>
+                                <th class="py-3 px-4 font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-body-md text-on-surface">
+                            <tr
+                                class="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
+                                <td class="py-3 px-4 text-outline">2023-10-27 10:00</td>
+                                <td class="py-3 px-4 font-medium">7.2</td>
+                                <td class="py-3 px-4">245</td>
+                                <td class="py-3 px-4">28.5</td>
+                                <td class="py-3 px-4">6.8</td>
+                                <td class="py-3 px-4"><span
+                                        class="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full">Ideal</span>
+                                </td>
+                            </tr>
+                            <tr
+                                class="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
+                                <td class="py-3 px-4 text-outline">2023-10-27 09:00</td>
+                                <td class="py-3 px-4 font-medium">7.1</td>
+                                <td class="py-3 px-4">250</td>
+                                <td class="py-3 px-4">28.4</td>
+                                <td class="py-3 px-4">6.6</td>
+                                <td class="py-3 px-4"><span
+                                        class="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full">Ideal</span>
+                                </td>
+                            </tr>
+                            <tr
+                                class="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
+                                <td class="py-3 px-4 text-outline">2023-10-27 08:00</td>
+                                <td class="py-3 px-4 font-medium text-error">6.4</td>
+                                <td class="py-3 px-4">248</td>
+                                <td class="py-3 px-4">28.2</td>
+                                <td class="py-3 px-4">6.5</td>
+                                <td class="py-3 px-4"><span
+                                        class="bg-error-container text-on-error-container text-xs px-2 py-1 rounded-full">Perlu
+                                        Perhatian</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggle-sidebar');
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                    document.body.classList.toggle('sidebar-collapsed');
+
+                    // Toggle icon
+                    const icon = toggleBtn.querySelector('.icon-menu');
+                    if (document.body.classList.contains('sidebar-collapsed')) {
+                        icon.textContent = 'menu';
+                    } else {
+                        icon.textContent = 'menu_open';
+                    }
+                });
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Riwayat Data Pemantauan - Lobster Care</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#9f8eff",
+                        "inverse-primary": "#b2c5ff",
+                        "surface-container-high": "#e7e8ea",
+                        "on-secondary-fixed-variant": "#4633a0",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f3",
+                        "background": "#f8f9fb",
+                        "on-primary-fixed": "#001848",
+                        "inverse-surface": "#2e3132",
+                        "surface-dim": "#d9dadc",
+                        "outline": "#737685",
+                        "tertiary": "#7b2600",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f8f9fb",
+                        "primary-container": "#0052cc",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "on-background": "#191c1e",
+                        "tertiary-fixed-dim": "#ffb59b",
+                        "primary": "#003d9b",
+                        "surface-container-highest": "#e1e2e4",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-container-low": "#f3f4f6",
+                        "outline-variant": "#c3c6d6",
+                        "secondary-fixed": "#e5deff",
+                        "on-tertiary-fixed-variant": "#812800",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#0c56d0",
+                        "surface-container": "#edeef0",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary-fixed": "#ffdbcf",
+                        "tertiary-container": "#a33500",
+                        "secondary-fixed-dim": "#c9bfff",
+                        "secondary": "#5e4db9",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e1e2e4",
+                        "on-secondary-fixed": "#1a0063",
+                        "on-secondary-container": "#341d8d",
+                        "surface": "#f8f9fb",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#ffc6b2",
+                        "on-surface-variant": "#434654",
+                        "primary-fixed": "#dae2ff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "20px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "stack-md": "16px",
+                        "container-margin": "24px",
+                        "sidebar-width": "260px",
+                        "sidebar-collapsed-width": "80px"
+                    },
+                    "fontFamily": {
+                        "metric-unit": [
+                            "Inter"
+                        ],
+                        "display-metrics": [
+                            "Manrope"
+                        ],
+                        "label-sm": [
+                            "Inter"
+                        ],
+                        "headline-lg": [
+                            "Manrope"
+                        ],
+                        "headline-md": [
+                            "Manrope"
+                        ],
+                        "body-md": [
+                            "Inter"
+                        ],
+                        "body-lg": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {
+                        "metric-unit": [
+                            "14px",
+                            {
+                                "lineHeight": "20px",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "display-metrics": [
+                            "36px",
+                            {
+                                "lineHeight": "44px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "label-sm": [
+                            "12px",
+                            {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "headline-lg": [
+                            "24px",
+                            {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "headline-md": [
+                            "18px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-md": [
+                            "14px",
+                            {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "body-lg": [
+                            "16px",
+                            {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .sidebar-transition {
+            transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar-text-transition {
+            transition: opacity 0.2s ease-in-out, width 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed #sidebar {
+            width: 80px !important;
+        }
+
+        .sidebar-collapsed #main-wrapper {
+            margin-left: 80px !important;
+        }
+
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .sidebar-collapsed .logo-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .sidebar-collapsed .export-text {
+            display: none;
+        }
+
+        .sidebar-collapsed .sidebar-btn-container {
+            justify-content: center;
+            padding: 0;
+        }
+
+        .sidebar-collapsed .sidebar-nav-item {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sidebar-collapsed .logo-container {
+            flex-direction: column;
+            gap: 16px;
+            padding: 0;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden min-h-screen sidebar-collapsed">
+    <!-- SideNavBar -->
+    <aside id="sidebar"
+        class="bg-surface-container-lowest w-[sidebar-width] h-screen fixed left-0 top-0 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col py-6 z-50 sidebar-transition">
+        <div class="px-5 mb-8 flex items-center justify-between gap-3 logo-container sidebar-transition">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-3xl flex-shrink-0"
+                    style="font-variation-settings: 'FILL' 1;">water_drop</span>
+                <div class="logo-text sidebar-text-transition whitespace-nowrap">
+                    <h1 class="font-headline-md text-headline-md text-primary">Lobster Care</h1>
+                    <p class="font-label-sm text-label-sm text-outline">Aquaculture IoT</p>
+                </div>
+            </div>
+            <button class="text-outline hover:bg-surface-container-low p-1 rounded-md transition-colors"
+                id="toggle-sidebar" title="Toggle Sidebar">
+                <span class="material-symbols-outlined icon-menu">menu</span>
+            </button>
+        </div>
+
+        <nav class="flex-1 flex flex-col gap-2">
+            <a class="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="dashboard.html">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="dashboard">dashboard</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 bg-primary-container text-primary font-bold border-l-4 border-primary transition-all duration-200 ease-in-out px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="history.html">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="history"
+                    style="font-variation-settings: 'FILL' 1;">history</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Riwayat Data</span>
+            </a>
+            <a class="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="report.html">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="assessment">analytics</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Laporan</span>
+            </a>
+            <a class="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item"
+                href="#">
+                <span class="material-symbols-outlined flex-shrink-0" data-icon="help">help</span>
+                <span class="sidebar-text sidebar-text-transition whitespace-nowrap">Dukungan</span>
+            </a>
+        </nav>
+        <div class="px-5 mt-auto sidebar-btn-container flex">
+            <button
+                class="w-full py-2 px-4 bg-primary text-on-primary rounded-DEFAULT font-label-sm text-label-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-[18px] flex-shrink-0">download</span>
+                <span class="export-text sidebar-text sidebar-text-transition whitespace-nowrap">Export Laporan</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div id="main-wrapper" class="ml-[sidebar-width] flex flex-col min-h-screen sidebar-transition">
+        <!-- TopAppBar -->
+        <header id="top-bar"
+            class="h-16 sticky top-0 z-40 bg-surface-bright border-b border-outline-variant flex items-center justify-between px-gutter sidebar-transition">
+            <div class="flex items-center gap-4">
+                <span class="text-primary font-headline-md text-headline-md font-semibold">Riwayat Data
+                    Pemantauan</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden md:block">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                    <input
+                        class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full font-body-md text-body-md focus:ring-2 focus:ring-primary w-64 text-on-surface"
+                        placeholder="Search..." type="text" />
+                </div>
+                <button
+                    class="text-outline hover:text-primary-container transition-colors p-2 rounded-full hover:bg-surface-container-low">
+                    <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                </button>
+                <div
+                    class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold font-body-md shadow-sm border border-outline-variant cursor-pointer ml-2">
+                    LC
+                </div>
+                <button
+                    class="text-outline font-label-sm text-label-sm hover:text-primary transition-colors cursor-pointer active:opacity-80">Logout</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-container-margin flex-1" id="main-content">
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="font-headline-lg text-headline-lg text-on-background">Riwayat Data Pemantauan</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">Review historical sensor data and
+                        performance metrics.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        class="bg-surface-container-low text-on-surface border border-outline-variant py-2 px-4 rounded-lg font-label-sm text-label-sm flex items-center gap-2 hover:bg-surface-container transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                        Download PDF
+                    </button>
+                    <button
+                        class="bg-primary text-on-primary py-2 px-4 rounded-lg font-label-sm text-label-sm flex items-center gap-2 hover:bg-primary-container transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-[18px]">csv</span>
+                        Download CSV
+                    </button>
+                </div>
+            </div>
+            <!-- Filter Bar -->
+            <div
+                class="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-4 mb-container-margin border border-outline-variant/30 flex flex-wrap gap-4 items-center">
+                <div class="flex items-center gap-2 mr-4">
+                    <span class="material-symbols-outlined text-outline">filter_list</span>
+                    <span
+                        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Filters</span>
+                </div>
+                <div class="flex gap-2 bg-surface-container-low p-1 rounded-lg">
+                    <button
+                        class="px-3 py-1.5 bg-white shadow-sm rounded-DEFAULT font-label-sm text-label-sm text-on-surface border border-outline-variant/50">Hari
+                        Ini</button>
+                    <button
+                        class="px-3 py-1.5 hover:bg-white/50 rounded-DEFAULT font-label-sm text-label-sm text-outline transition-colors">7
+                        Hari Terakhir</button>
+                    <button
+                        class="px-3 py-1.5 hover:bg-white/50 rounded-DEFAULT font-label-sm text-label-sm text-outline transition-colors">30
+                        Hari Terakhir</button>
+                    <button
+                        class="px-3 py-1.5 hover:bg-white/50 rounded-DEFAULT font-label-sm text-label-sm text-outline transition-colors flex items-center gap-1">
+                        Kustom <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                    </button>
+                </div>
+                <div class="h-6 w-px bg-outline-variant/50 hidden md:block"></div>
+                <div class="flex gap-2">
+                    <label
+                        class="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
+                        <input checked="" class="text-primary rounded-sm focus:ring-primary border-outline"
+                            type="checkbox" />
+                        <span class="font-label-sm text-label-sm text-on-surface">pH Air</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
+                        <input checked="" class="text-primary rounded-sm focus:ring-primary border-outline"
+                            type="checkbox" />
+                        <span class="font-label-sm text-label-sm text-on-surface">TDS</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
+                        <input checked="" class="text-primary rounded-sm focus:ring-primary border-outline"
+                            type="checkbox" />
+                        <span class="font-label-sm text-label-sm text-on-surface">Suhu</span>
+                    </label>
+                    <label
+                        class="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
+                        <input checked="" class="text-primary rounded-sm focus:ring-primary border-outline"
+                            type="checkbox" />
+                        <span class="font-label-sm text-label-sm text-on-surface">DO</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Summary Section (Bento style) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-container-margin">
+                <!-- pH Summary -->
+                <div
+                    class="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
+                    <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-outlined text-[100px] text-primary">water_drop</span>
+                    </div>
+                    <h3
+                        class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span> Rata-rata pH Air
+                    </h3>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">7.8</div>
+                    <div class="font-label-sm text-label-sm text-outline mt-1">Normal Range: 7.5 - 8.2</div>
+                </div>
+                <!-- TDS Summary -->
+                <div
+                    class="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
+                    <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-outlined text-[100px] text-primary">blur_on</span>
+                    </div>
+                    <h3
+                        class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span> Rata-rata TDS
+                    </h3>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">245 <span
+                            class="text-headline-md font-body-md text-outline">mg/L</span></div>
+                    <div class="font-label-sm text-label-sm text-outline mt-1">Normal Range: 200 - 300</div>
+                </div>
+                <!-- Temp Summary -->
+                <div
+                    class="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-error-container relative overflow-hidden group">
+                    <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-outlined text-[100px] text-error">thermostat</span>
+                    </div>
+                    <h3
+                        class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-error"></span> Rata-rata Suhu
+                    </h3>
+                    <div class="font-display-metrics text-display-metrics text-error">28.5 <span
+                            class="text-headline-md font-body-md text-error/70">°C</span></div>
+                    <div class="font-label-sm text-label-sm text-error mt-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">trending_up</span> Slightly Elevated
+                    </div>
+                </div>
+                <!-- DO Summary -->
+                <div
+                    class="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
+                    <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <span class="material-symbols-outlined text-[100px] text-primary">bubble_chart</span>
+                    </div>
+                    <h3
+                        class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-primary"></span> Rata-rata DO
+                    </h3>
+                    <div class="font-display-metrics text-display-metrics text-on-surface">6.2 <span
+                            class="text-headline-md font-body-md text-outline">mg/L</span></div>
+                    <div class="font-label-sm text-label-sm text-outline mt-1">Normal Range: &gt; 5.0</div>
+                </div>
+            </div>
+            <!-- Data Table Card -->
+            <div
+                class="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant/50 bg-surface-container-lowest">
+                                <th class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Waktu
+                                </th>
+                                <th class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">pH Air
+                                </th>
+                                <th class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">TDS
+                                    (mg/L)</th>
+                                <th class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Suhu
+                                    (°C)</th>
+                                <th class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">
+                                    Oksigen (mg/L)</th>
+                                <th class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status
+                                </th>
+                                <th
+                                    class="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-outline-variant/30 font-metric-unit text-metric-unit text-on-surface">
+                            <!-- Row 1: Needs Attention -->
+                            <tr class="hover:bg-surface-container-low transition-colors bg-error-container/10">
+                                <td class="p-4 text-on-surface-variant font-body-md text-body-md">24 Oct 2023, 14:00
+                                </td>
+                                <td class="p-4">7.8</td>
+                                <td class="p-4">245</td>
+                                <td class="p-4 font-semibold text-error">29.1 <span
+                                        class="material-symbols-outlined text-[14px] align-middle">arrow_upward</span>
+                                </td>
+                                <td class="p-4">6.1</td>
+                                <td class="p-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-error-container text-on-error-container border border-error/20">
+                                        Perlu Perhatian
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-outline hover:text-primary transition-colors p-1"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 2: Ideal -->
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="p-4 text-on-surface-variant font-body-md text-body-md">24 Oct 2023, 13:00
+                                </td>
+                                <td class="p-4">7.7</td>
+                                <td class="p-4">242</td>
+                                <td class="p-4">28.0</td>
+                                <td class="p-4">6.3</td>
+                                <td class="p-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e6f4ea] text-[#1e8e3e] border border-[#1e8e3e]/20">
+                                        Ideal
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-outline hover:text-primary transition-colors p-1"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 3: Ideal -->
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="p-4 text-on-surface-variant font-body-md text-body-md">24 Oct 2023, 12:00
+                                </td>
+                                <td class="p-4">7.8</td>
+                                <td class="p-4">240</td>
+                                <td class="p-4">27.8</td>
+                                <td class="p-4">6.4</td>
+                                <td class="p-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e6f4ea] text-[#1e8e3e] border border-[#1e8e3e]/20">
+                                        Ideal
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-outline hover:text-primary transition-colors p-1"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 4: Ideal -->
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="p-4 text-on-surface-variant font-body-md text-body-md">24 Oct 2023, 11:00
+                                </td>
+                                <td class="p-4">7.9</td>
+                                <td class="p-4">238</td>
+                                <td class="p-4">27.5</td>
+                                <td class="p-4">6.5</td>
+                                <td class="p-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e6f4ea] text-[#1e8e3e] border border-[#1e8e3e]/20">
+                                        Ideal
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-outline hover:text-primary transition-colors p-1"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 5: Ideal -->
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="p-4 text-on-surface-variant font-body-md text-body-md">24 Oct 2023, 10:00
+                                </td>
+                                <td class="p-4">7.8</td>
+                                <td class="p-4">235</td>
+                                <td class="p-4">27.2</td>
+                                <td class="p-4">6.5</td>
+                                <td class="p-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e6f4ea] text-[#1e8e3e] border border-[#1e8e3e]/20">
+                                        Ideal
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-outline hover:text-primary transition-colors p-1"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                            <!-- Row 6: Ideal -->
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="p-4 text-on-surface-variant font-body-md text-body-md">24 Oct 2023, 09:00
+                                </td>
+                                <td class="p-4">7.7</td>
+                                <td class="p-4">235</td>
+                                <td class="p-4">27.0</td>
+                                <td class="p-4">6.6</td>
+                                <td class="p-4">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e6f4ea] text-[#1e8e3e] border border-[#1e8e3e]/20">
+                                        Ideal
+                                    </span>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-outline hover:text-primary transition-colors p-1"><span
+                                            class="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="border-t border-outline-variant/30 p-4 bg-surface-bright flex items-center justify-between">
+                    <div class="font-label-sm text-label-sm text-outline">
+                        Showing <span class="font-semibold text-on-surface">1</span> to <span
+                            class="font-semibold text-on-surface">6</span> of <span
+                            class="font-semibold text-on-surface">124</span> entries
+                    </div>
+                    <div class="flex gap-1">
+                        <button
+                            class="p-2 border border-outline-variant/50 rounded-DEFAULT text-outline hover:bg-surface-container-low disabled:opacity-50"
+                            disabled="">
+                            <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                        </button>
+                        <button
+                            class="px-3 py-1 bg-primary text-on-primary rounded-DEFAULT font-label-sm text-label-sm">1</button>
+                        <button
+                            class="px-3 py-1 border border-outline-variant/50 text-on-surface hover:bg-surface-container-low rounded-DEFAULT font-label-sm text-label-sm">2</button>
+                        <button
+                            class="px-3 py-1 border border-outline-variant/50 text-on-surface hover:bg-surface-container-low rounded-DEFAULT font-label-sm text-label-sm">3</button>
+                        <span class="px-2 py-1 text-outline">...</span>
+                        <button
+                            class="px-3 py-1 border border-outline-variant/50 text-on-surface hover:bg-surface-container-low rounded-DEFAULT font-label-sm text-label-sm">21</button>
+                        <button
+                            class="p-2 border border-outline-variant/50 rounded-DEFAULT text-on-surface hover:bg-surface-container-low">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggle-sidebar');
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                    document.body.classList.toggle('sidebar-collapsed');
+
+                    // Toggle icon
+                    const icon = toggleBtn.querySelector('.icon-menu');
+                    if (document.body.classList.contains('sidebar-collapsed')) {
+                        icon.textContent = 'menu';
+                    } else {
+                        icon.textContent = 'menu_open';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
