@@ -1,17 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-const trendData24h = [
-  { time: '00:00', score: 85 },
-  { time: '04:00', score: 80 },
-  { time: '08:00', score: 90 },
-  { time: '12:00', score: 75 },
-  { time: '16:00', score: 85 },
-  { time: '20:00', score: 95 },
-  { time: '24:00', score: 90 },
-];
-
 const Dashboard = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/dashboard');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const jsonData = await response.json();
+      setData(jsonData);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    // Refresh data every 5 seconds for dummy live effect
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
+        <div className="text-error bg-error-container p-4 rounded-lg">Error loading data: {error}</div>
+      </main>
+    );
+  }
+
+  let classBg = "bg-primary-fixed";
+  let classText = "text-on-primary-fixed";
+  let classIconBg = "bg-primary";
+  let classIconColor = "text-on-primary";
+  
+  if (data.classification.status === "Kondisi Bahaya") {
+    classBg = "bg-error-container";
+    classText = "text-on-error-container";
+    classIconBg = "bg-error";
+    classIconColor = "text-on-error";
+  } else if (data.classification.status === "Perlu Perhatian") {
+    classBg = "bg-[#FFF4E5]"; 
+    classText = "text-[#B26A00]"; 
+    classIconBg = "bg-[#FFA726]";
+    classIconColor = "text-white";
+  }
+
   return (
     <main className="p-container-margin flex-1" id="main-content">
       <div className="mb-stack-md flex items-center justify-between">
@@ -21,92 +70,52 @@ const Dashboard = () => {
       
       {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-md">
-        {/* pH Card */}
-        <div className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2 text-outline">
-              <span className="material-symbols-outlined text-primary">water_drop</span>
-              <span className="font-body-md">pH Air</span>
+        {data.metrics.map((metric, index) => {
+           const colorClasses = {
+             ph: { icon: 'text-primary', bg: 'bg-primary', bar: 'bg-primary w-[70%]' },
+             tds: { icon: 'text-secondary', bg: 'bg-secondary', bar: 'bg-secondary w-[40%]' },
+             suhu: { icon: 'text-tertiary', bg: 'bg-tertiary', bar: 'bg-tertiary w-[80%]' },
+             oksigen: { icon: 'text-primary-container', bg: 'bg-primary-container', bar: 'bg-primary-container w-[65%]' }
+           };
+           const theme = colorClasses[metric.id] || colorClasses.ph;
+
+           return (
+            <div key={metric.id} className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-2 text-outline">
+                  <span className={`material-symbols-outlined ${theme.icon}`}>{metric.icon}</span>
+                  <span className="font-body-md">{metric.title}</span>
+                </div>
+                {metric.subtitle && (
+                  metric.id === 'ph' ? 
+                  <span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full font-medium">{metric.subtitle}</span> :
+                  <span className="text-outline text-xs">{metric.subtitle}</span>
+                )}
+              </div>
+              <div className="font-display-metrics text-display-metrics text-on-surface">{metric.value}</div>
+              <div className={`flex items-center gap-1 ${metric.trendColor} text-sm font-medium`}>
+                <span className="material-symbols-outlined text-sm">{metric.trendIcon}</span>
+                <span className="">{metric.trendText}</span>
+              </div>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
+                <div className={`h-full ${theme.bar}`}></div>
+              </div>
             </div>
-            <span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full font-medium">Target 6.5 - 8.5</span>
-          </div>
-          <div className="font-display-metrics text-display-metrics text-on-surface">7.2</div>
-          <div className="flex items-center gap-1 text-primary text-sm font-medium">
-            <span className="material-symbols-outlined text-sm">trending_up</span>
-            <span className="">+0.1 vs 1 jam lalu</span>
-          </div>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
-            <div className="h-full bg-primary w-[70%]"></div>
-          </div>
-        </div>
-        
-        {/* TDS Card */}
-        <div className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2 text-outline">
-              <span className="material-symbols-outlined text-secondary">scatter_plot</span>
-              <span className="font-body-md">TDS (mg/L)</span>
-            </div>
-          </div>
-          <div className="font-display-metrics text-display-metrics text-on-surface">245</div>
-          <div className="flex items-center gap-1 text-secondary text-sm font-medium">
-            <span className="material-symbols-outlined text-sm">trending_down</span>
-            <span className="">-5 vs 1 jam lalu</span>
-          </div>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
-            <div className="h-full bg-secondary w-[40%]"></div>
-          </div>
-        </div>
-        
-        {/* Suhu Card */}
-        <div className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2 text-outline">
-              <span className="material-symbols-outlined text-tertiary">thermostat</span>
-              <span className="font-body-md">Suhu (°C)</span>
-            </div>
-          </div>
-          <div className="font-display-metrics text-display-metrics text-on-surface">28.5</div>
-          <div className="flex items-center gap-1 text-outline text-sm font-medium">
-            <span className="material-symbols-outlined text-sm">trending_flat</span>
-            <span className="">Stabil</span>
-          </div>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
-            <div className="h-full bg-tertiary w-[80%]"></div>
-          </div>
-        </div>
-        
-        {/* Oksigen Card */}
-        <div className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2 text-outline">
-              <span className="material-symbols-outlined text-primary-container">air</span>
-              <span className="font-body-md">Oksigen Terlarut</span>
-            </div>
-            <span className="text-outline text-xs">mg/L</span>
-          </div>
-          <div className="font-display-metrics text-display-metrics text-on-surface">6.8</div>
-          <div className="flex items-center gap-1 text-primary-container text-sm font-medium">
-            <span className="material-symbols-outlined text-sm">trending_up</span>
-            <span className="">+0.2 vs 1 jam lalu</span>
-          </div>
-          <div className="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
-            <div className="h-full bg-primary-container w-[65%]"></div>
-          </div>
-        </div>
+           );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-stack-md">
         {/* Classification Result */}
-        <div className="bg-primary-fixed p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] lg:col-span-1 flex flex-col justify-center">
-          <h3 className="font-headline-md text-headline-md text-on-primary-fixed mb-4">Hasil Klasifikasi</h3>
+        <div className={`${classBg} p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] lg:col-span-1 flex flex-col justify-center transition-colors duration-300`}>
+          <h3 className={`font-headline-md text-headline-md ${classText} mb-4`}>{data.classification.title}</h3>
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
-              <span className="material-symbols-outlined text-on-primary text-3xl">check_circle</span>
+            <div className={`w-16 h-16 rounded-full ${classIconBg} flex items-center justify-center transition-colors duration-300`}>
+              <span className={`material-symbols-outlined ${classIconColor} text-3xl`}>{data.classification.icon}</span>
             </div>
             <div>
-              <div className="font-display-metrics text-2xl text-on-primary-fixed mb-1">Kondisi Ideal</div>
-              <div className="text-on-primary-fixed-variant text-sm">Lingkungan optimal untuk pertumbuhan.</div>
+              <div className={`font-display-metrics text-2xl ${classText} mb-1`}>{data.classification.status}</div>
+              <div className={`${classText} opacity-90 text-sm`}>{data.classification.description}</div>
             </div>
           </div>
         </div>
@@ -170,7 +179,7 @@ const Dashboard = () => {
           </div>
           <div className="h-48 w-full rounded bg-surface-container-lowest flex items-end pb-2 pt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData24h} margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={data.trend} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#c3c6d6" opacity={0.5} />
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 10, fontFamily: 'Inter' }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 10, fontFamily: 'Inter' }} domain={[0, 100]} ticks={[0, 50, 100]} />
@@ -199,30 +208,27 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody className="text-body-md text-on-surface">
-              <tr className="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
-                <td className="py-3 px-4 text-outline">2023-10-27 10:00</td>
-                <td className="py-3 px-4 font-medium">7.2</td>
-                <td className="py-3 px-4">245</td>
-                <td className="py-3 px-4">28.5</td>
-                <td className="py-3 px-4">6.8</td>
-                <td className="py-3 px-4"><span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full">Ideal</span></td>
-              </tr>
-              <tr className="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
-                <td className="py-3 px-4 text-outline">2023-10-27 09:00</td>
-                <td className="py-3 px-4 font-medium">7.1</td>
-                <td className="py-3 px-4">250</td>
-                <td className="py-3 px-4">28.4</td>
-                <td className="py-3 px-4">6.6</td>
-                <td className="py-3 px-4"><span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full">Ideal</span></td>
-              </tr>
-              <tr className="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
-                <td className="py-3 px-4 text-outline">2023-10-27 08:00</td>
-                <td className="py-3 px-4 font-medium text-error">6.4</td>
-                <td className="py-3 px-4">248</td>
-                <td className="py-3 px-4">28.2</td>
-                <td className="py-3 px-4">6.5</td>
-                <td className="py-3 px-4"><span className="bg-error-container text-on-error-container text-xs px-2 py-1 rounded-full">Perlu Perhatian</span></td>
-              </tr>
+              {data.history.map((row, index) => {
+                let statusBadge = "";
+                if (row.status === "Ideal") {
+                  statusBadge = <span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full">Ideal</span>;
+                } else if (row.status === "Bahaya") {
+                  statusBadge = <span className="bg-error text-on-error text-xs px-2 py-1 rounded-full">Bahaya</span>;
+                } else {
+                  statusBadge = <span className="bg-error-container text-on-error-container text-xs px-2 py-1 rounded-full">Perlu Perhatian</span>;
+                }
+
+                return (
+                  <tr key={index} className="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
+                    <td className="py-3 px-4 text-outline">{row.timestamp}</td>
+                    <td className={`py-3 px-4 font-medium ${row.ph < 6.5 || row.ph > 8.5 ? 'text-error' : ''}`}>{row.ph}</td>
+                    <td className={`py-3 px-4 ${row.tds > 300 ? 'text-error' : ''}`}>{row.tds}</td>
+                    <td className={`py-3 px-4 ${row.suhu < 25.0 || row.suhu > 30.0 ? 'text-error' : ''}`}>{row.suhu}</td>
+                    <td className={`py-3 px-4 ${row.oksigen < 6.0 ? 'text-error' : ''}`}>{row.oksigen}</td>
+                    <td className="py-3 px-4">{statusBadge}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

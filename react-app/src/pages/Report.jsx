@@ -1,23 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, ReferenceLine, PieChart, Pie, Cell } from 'recharts';
 
-const trendData = [
-  { name: 'Sen', score: 60 },
-  { name: 'Sel', score: 65 },
-  { name: 'Rab', score: 50 },
-  { name: 'Kam', score: 80 },
-  { name: 'Jum', score: 70 },
-  { name: 'Sab', score: 90 },
-  { name: 'Min', score: 95 },
-];
-
-const distributionData = [
-  { name: 'Kondisi Ideal', value: 85 },
-  { name: 'Perlu Perhatian', value: 15 },
-];
-const COLORS = ['#003d9b', '#E6F4EA'];
+// Colors for PieChart: Ideal (Blue), Perlu Perhatian (Green/Yellowish depending on theme, using original green), Bahaya (Red)
+const COLORS = ['#003d9b', '#E6F4EA', '#f8d7da'];
 
 const Report = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/report');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+    const intervalId = setInterval(fetchData, 5000);
+    
+    return () => clearInterval(intervalId);
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
+        <div className="text-error bg-error-container p-4 rounded-lg">Error loading data: {error}</div>
+      </main>
+    );
+  }
+
+  // Helper variables for classification
+  let classIcon = "check_circle";
+  let classBg = "bg-[#E6F4EA]";
+  let classText = "text-[#137333]";
+  let classDesc = "Lingkungan optimal untuk pertumbuhan.";
+  
+  if (data.summary.classification === "Bahaya" || data.summary.classification === "Kondisi Bahaya") {
+    classIcon = "warning";
+    classBg = "bg-error-container";
+    classText = "text-error";
+    classDesc = "Parameter kritis. Segera lakukan tindakan!";
+  } else if (data.summary.classification === "Perlu Perhatian") {
+    classIcon = "info";
+    classBg = "bg-[#FFF8E1]";
+    classText = "text-[#F29900]";
+    classDesc = "Beberapa parameter butuh perhatian.";
+  }
+
+  // Finding ideal percentage for the big text inside PieChart
+  const idealItem = data.distributionData.find(d => d.name === "Kondisi Ideal");
+  const idealPercentage = idealItem ? idealItem.value : 0;
+
   return (
     <main className="p-container-margin flex-1" id="main-content">
       {/* Page Header */}
@@ -46,7 +95,7 @@ const Report = () => {
             <div>
               <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Tingkat Kesintasan (SR)</h3>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="font-display-metrics text-display-metrics text-on-surface">85</span>
+                <span className="font-display-metrics text-display-metrics text-on-surface">{data.summary.sr}</span>
                 <span className="font-metric-unit text-metric-unit text-outline">%</span>
               </div>
             </div>
@@ -56,7 +105,7 @@ const Report = () => {
           </div>
           <div className="flex items-center text-[#137333] font-body-md text-body-md">
             <span className="material-symbols-outlined text-sm mr-1">trending_up</span>
-            <span>+2% dari minggu lalu</span>
+            <span>berdasarkan simulasi WQI</span>
           </div>
         </div>
         
@@ -64,17 +113,17 @@ const Report = () => {
         <div className="bg-surface-container-lowest rounded-xl p-card-padding shadow-sm border border-outline-variant flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Hasil Klasifikasi</h3>
+              <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Hasil Klasifikasi Rata-rata</h3>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="font-headline-lg text-headline-lg text-on-surface">Kondisi Ideal</span>
+                <span className="font-headline-lg text-headline-lg text-on-surface">{data.summary.classification}</span>
               </div>
             </div>
-            <div className="bg-[#E6F4EA] text-[#137333] p-2 rounded-full">
-              <span className="material-symbols-outlined">check_circle</span>
+            <div className={`${classBg} ${classText} p-2 rounded-full`}>
+              <span className="material-symbols-outlined">{classIcon}</span>
             </div>
           </div>
           <div className="flex items-center text-outline font-body-md text-body-md">
-            <span>Lingkungan optimal untuk pertumbuhan.</span>
+            <span>{classDesc}</span>
           </div>
         </div>
         
@@ -84,7 +133,7 @@ const Report = () => {
             <div>
               <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider">Kepatuhan Parameter</h3>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="font-display-metrics text-display-metrics text-on-surface">98</span>
+                <span className="font-display-metrics text-display-metrics text-on-surface">{data.summary.compliance}</span>
                 <span className="font-metric-unit text-metric-unit text-outline">% Ideal</span>
               </div>
             </div>
@@ -93,7 +142,7 @@ const Report = () => {
             </div>
           </div>
           <div className="flex items-center text-outline font-body-md text-body-md">
-            <span>pH & DO stabil dalam range aman</span>
+            <span>Rata-rata kestabilan pH, TDS, Suhu & DO</span>
           </div>
         </div>
       </div>
@@ -103,17 +152,17 @@ const Report = () => {
         {/* Main Trend Chart */}
         <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl p-card-padding shadow-sm border border-outline-variant flex flex-col">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="font-headline-md text-headline-md text-on-surface">Tren Kualitas Air Agregat</h2>
+            <h2 className="font-headline-md text-headline-md text-on-surface">Tren Kualitas Air Mingguan</h2>
             <button className="text-outline hover:text-primary transition-colors">
               <span className="material-symbols-outlined">more_vert</span>
             </button>
           </div>
           <div className="relative flex-1 min-h-[300px] w-full pb-2 flex items-end mt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+              <LineChart data={data.trendData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#c3c6d6" opacity={0.5} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 12, fontFamily: 'Inter' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 12, fontFamily: 'Inter' }} domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 12, fontFamily: 'Inter' }} domain={[0, 110]} ticks={[0, 25, 50, 75, 100]} />
                 <RechartsTooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e1e2e4', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} itemStyle={{ fontFamily: 'Inter', fontSize: 14 }} labelStyle={{ fontFamily: 'Inter', fontSize: 12, color: '#737685', marginBottom: 4 }} />
                 <ReferenceLine y={80} stroke="#137333" strokeDasharray="4 4" label={{ position: 'top', value: 'Ideal Threshold', fill: '#137333', fontSize: 10, fontFamily: 'Inter' }} />
                 <Line type="monotone" dataKey="score" stroke="#003d9b" strokeWidth={3} dot={{ r: 4, fill: '#003d9b', strokeWidth: 0 }} activeDot={{ r: 6, strokeWidth: 0 }} />
@@ -133,7 +182,7 @@ const Report = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={distributionData}
+                    data={data.distributionData}
                     cx="50%"
                     cy="50%"
                     innerRadius={70}
@@ -144,35 +193,42 @@ const Report = () => {
                     startAngle={90}
                     endAngle={-270}
                   >
-                    {distributionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
+                    {data.distributionData.map((entry, index) => {
+                      let color = COLORS[0];
+                      if (entry.name === "Kondisi Ideal" || entry.name === "Ideal") color = '#003d9b'; // Primary Blue
+                      else if (entry.name === "Perlu Perhatian") color = '#F29900'; // Warning Yellow
+                      else if (entry.name === "Bahaya" || entry.name === "Kondisi Bahaya") color = '#dc362e'; // Error Red
+                      
+                      return <Cell key={`cell-${index}`} fill={color} />;
+                    })}
                   </Pie>
                   <RechartsTooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e1e2e4', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} itemStyle={{ fontFamily: 'Inter', fontSize: 14 }} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute flex items-center justify-center pointer-events-none">
                 <div className="text-center">
-                  <span className="block font-display-metrics text-display-metrics text-on-surface">85%</span>
+                  <span className="block font-display-metrics text-display-metrics text-on-surface">{idealPercentage}%</span>
                   <span className="block font-label-sm text-label-sm text-outline uppercase">Ideal</span>
                 </div>
               </div>
             </div>
+            
             <div className="w-full mt-8 flex flex-col gap-3">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-primary"></div>
-                  <span className="font-body-md text-body-md text-on-surface">Kondisi Ideal</span>
-                </div>
-                <span className="font-label-sm text-label-sm font-semibold text-on-surface">85%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#E6F4EA]"></div>
-                  <span className="font-body-md text-body-md text-on-surface">Perlu Perhatian</span>
-                </div>
-                <span className="font-label-sm text-label-sm font-semibold text-on-surface">15%</span>
-              </div>
+              {data.distributionData.map((entry, index) => {
+                  let bgColor = "bg-primary";
+                  if (entry.name === "Perlu Perhatian") bgColor = "bg-[#F29900]";
+                  if (entry.name === "Bahaya" || entry.name === "Kondisi Bahaya") bgColor = "bg-error";
+                  
+                  return (
+                    <div key={index} className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${bgColor}`}></div>
+                        <span className="font-body-md text-body-md text-on-surface">{entry.name}</span>
+                      </div>
+                      <span className="font-label-sm text-label-sm font-semibold text-on-surface">{entry.value}%</span>
+                    </div>
+                  );
+              })}
             </div>
           </div>
         </div>
