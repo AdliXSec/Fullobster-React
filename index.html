@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Fullobster | Precision Stewardship for Marine Ecosystems</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed-dim": "#3adccc",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#00201d",
+                        "on-background": "#191c1e",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#fe7e4f",
+                        "primary": "#001629",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#001d34",
+                        "background": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "tertiary": "#001816",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-container": "#6b1f00",
+                        "on-primary-container": "#7293b6",
+                        "primary-fixed": "#cfe5ff",
+                        "on-secondary-fixed": "#380c00",
+                        "surface-dim": "#d8dadc",
+                        "surface-container": "#eceef0",
+                        "on-primary-fixed-variant": "#274969",
+                        "primary-fixed-dim": "#a8caef",
+                        "surface-tint": "#406182",
+                        "on-primary": "#ffffff",
+                        "secondary": "#a43c12",
+                        "outline-variant": "#c3c7ce",
+                        "primary-container": "#002b49",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed-dim": "#ffb59c",
+                        "outline": "#73777e",
+                        "on-surface-variant": "#42474d",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#002f2b",
+                        "on-tertiary-fixed-variant": "#005049",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#61f9e9",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed": "#ffdbcf",
+                        "surface-variant": "#e0e3e5",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#a8caef",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#00a295",
+                        "on-secondary-fixed-variant": "#822800",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap-desktop": "120px",
+                        "grid-margin": "24px",
+                        "base": "8px",
+                        "section-gap-mobile": "64px",
+                        "grid-gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "sans": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "display-lg": ["Manrope", "sans-serif"],
+                        "headline-md": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Animations & Effects */
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(0, 22, 41, 0.05) 0%, rgba(247, 249, 251, 1) 100%);
+        }
+
+        .pulse-dot {
+            animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Enhanced Reveals */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .heading-reveal {
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-up.active,
+        .heading-reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* 3D Tilt */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: transform 0.1s;
+        }
+
+        .hover-lift {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(0, 22, 41, 0.12), 0 10px 15px -5px rgba(0, 22, 41, 0.08);
+        }
+
+        .chart-glow {
+            filter: drop-shadow(0 0 8px rgba(58, 220, 204, 0.5));
+        }
+
+        .nav-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(224, 227, 229, 0.8);
+        }
+
+        /* Magnetic CTA */
+        .magnetic-btn {
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* Bubble Background */
+        .bubbles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background-color: rgba(58, 220, 204, 0.1);
+            border-radius: 50%;
+            animation: rise linear infinite;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(20px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Animated Data Flow */
+        .flow-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(195, 199, 206, 0.3);
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        .flow-pulse {
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 50px;
+            height: 6px;
+            background: linear-gradient(90deg, transparent, var(--color-tertiary-fixed-dim), transparent);
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--color-tertiary-fixed-dim);
+            animation: flowMove 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes flowMove {
+            0% {
+                left: 0%;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* Smooth Parallax wrapper */
+        .parallax-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .parallax-img {
+            will-change: transform;
+            transform: scale(1.1);
+            /* Give room to move */
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-background font-sans antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+    <!-- TopNavBar -->
+    <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-grid-margin py-4 max-w-7xl mx-auto bg-transparent backdrop-blur-md dark:bg-transparent transition-all duration-300"
+        id="main-nav">
+        <a class="font-headline-md text-headline-md font-bold text-primary hover:opacity-80 transition-opacity"
+            href="#">
+            Fullobster
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+            <a class="font-label-md text-label-md text-secondary border-b-2 border-secondary pb-1 style_interactions"
+                href="#">Platform</a>
+            <a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300"
+                href="#technology">Technology</a>
+            <a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300"
+                href="#impact">Impact</a>
+            <a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300"
+                href="#testimonials">Clients</a>
+        </div>
+        <button
+            class="magnetic-btn bg-secondary-container hover:bg-[#ff8f66] text-on-secondary-container font-label-md text-label-md px-6 py-3 rounded-full transition-all duration-300 shadow-[0_4px_14px_0_rgba(254,126,79,0.39)]">
+            Schedule Demo
+        </button>
+    </nav>
+    <!-- Hero Section -->
+    <section
+        class="relative min-h-screen flex items-center justify-center pt-24 pb-section-gap-mobile md:pb-section-gap-desktop overflow-hidden">
+        <!-- Shader Background -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        <!-- Bubbles Background -->
+        <div class="bubbles-container" id="bubbles"></div>
+        <!-- Hero Content -->
+        <div class="relative z-20 w-full max-w-7xl mx-auto px-grid-margin flex flex-col items-center text-center">
+            <span
+                class="font-label-md text-label-md text-primary font-bold tracking-widest uppercase mb-6 bg-white/70 backdrop-blur-md px-5 py-2 rounded-full border border-white/40 heading-reveal shadow-sm">The
+                Future of Aquaculture</span>
+            <h1 class="font-display-lg text-display-lg text-primary max-w-4xl mb-6 heading-reveal"
+                style="transition-delay: 0.1s;">
+                Precision Stewardship for <br class="hidden md:block" /> Marine Ecosystems.
+            </h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant font-medium max-w-2xl mb-10 reveal-up"
+                style="transition-delay: 0.2s;">
+                Advanced IoT monitoring meets fluid dynamics. Real-time data architecture designed specifically for the
+                unique challenges of commercial fisheries and sustainable aquaculture.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 reveal-up" style="transition-delay: 0.3s;">
+                <button
+                    class="magnetic-btn bg-secondary-container hover:bg-[#ff8f66] text-on-secondary-container font-label-md text-label-md px-8 py-4 rounded-full transition-all duration-300 shadow-[0_8px_20px_0_rgba(254,126,79,0.4)]">
+                    Schedule Demo
+                </button>
+                <button
+                    class="magnetic-btn bg-white/50 backdrop-blur-sm border-2 border-primary text-primary font-label-md text-label-md px-8 py-4 rounded-full transition-all duration-300 hover:bg-primary/5 font-semibold">
+                    Explore Platform
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- Live Status Section -->
+    <section class="relative z-20 w-full max-w-7xl mx-auto px-grid-margin py-section-gap-mobile md:py-16 -mt-32">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-grid-gutter">
+            <!-- Card 1: pH -->
+            <div class="glass-panel rounded-xl p-8 tilt-card hover-lift reveal-up shadow-[0_8px_30px_rgb(0,22,41,0.08)] border-t border-white/80"
+                style="transition-delay: 0.1s;">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span
+                            class="w-3 h-3 rounded-full bg-tertiary-fixed-dim pulse-dot shadow-[0_0_8px_rgba(58,220,204,0.6)]"></span>
+                        <span
+                            class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Live
+                            pH Level</span>
+                    </div>
+                    <span class="material-symbols-outlined text-outline font-bold"
+                        style="font-variation-settings: 'FILL' 0;">water_drop</span>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="font-headline-lg text-headline-lg text-primary font-bold">7.8</span>
+                    <span class="font-body-md text-body-md text-tertiary-container font-bold">+0.2 (Optimal)</span>
+                </div>
+                <div class="mt-4 h-16 w-full opacity-70">
+                    <svg class="w-full h-full chart-glow" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0,15 Q10,10 20,15 T40,15 T60,10 T80,18 T100,15 L100,30 L0,30 Z" fill="url(#grad1)"
+                            opacity="0.3"></path>
+                        <path d="M0,15 Q10,10 20,15 T40,15 T60,10 T80,18 T100,15" fill="none" stroke="#3adccc"
+                            stroke-width="2.5"></path>
+                        <defs>
+                            <lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3adccc;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#3adccc;stop-opacity:0"></stop>
+                            </lineargradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+            <!-- Card 2: Temp -->
+            <div class="glass-panel rounded-xl p-8 tilt-card hover-lift reveal-up shadow-[0_8px_30px_rgb(0,22,41,0.08)] border-t border-white/80"
+                style="transition-delay: 0.2s;">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span
+                            class="w-3 h-3 rounded-full bg-secondary-container pulse-dot shadow-[0_0_8px_rgba(254,126,79,0.6)]"></span>
+                        <span
+                            class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Water
+                            Temp</span>
+                    </div>
+                    <span class="material-symbols-outlined text-outline font-bold"
+                        style="font-variation-settings: 'FILL' 0;">thermostat</span>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="font-headline-lg text-headline-lg text-primary font-bold">28.5°C</span>
+                    <span class="font-body-md text-body-md text-secondary-container font-bold">Elevated</span>
+                </div>
+                <div class="mt-4 h-16 w-full opacity-70">
+                    <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0,20 Q15,20 30,15 T60,10 T80,5 T100,2 L100,30 L0,30 Z" fill="url(#grad2)"
+                            opacity="0.3"></path>
+                        <path d="M0,20 Q15,20 30,15 T60,10 T80,5 T100,2" fill="none" stroke="#fe7e4f"
+                            stroke-width="2.5"></path>
+                        <defs>
+                            <lineargradient id="grad2" x1="0%" x2="0%" y1="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fe7e4f;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#fe7e4f;stop-opacity:0"></stop>
+                            </lineargradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+            <!-- Card 3: DO -->
+            <div class="glass-panel rounded-xl p-8 tilt-card hover-lift reveal-up shadow-[0_8px_30px_rgb(0,22,41,0.08)] border-t border-white/80"
+                style="transition-delay: 0.3s;">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center space-x-2">
+                        <span
+                            class="w-3 h-3 rounded-full bg-tertiary-fixed-dim pulse-dot shadow-[0_0_8px_rgba(58,220,204,0.6)]"></span>
+                        <span
+                            class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Dissolved
+                            O2</span>
+                    </div>
+                    <span class="material-symbols-outlined text-outline font-bold"
+                        style="font-variation-settings: 'FILL' 0;">air</span>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="font-headline-lg text-headline-lg text-primary font-bold">6.2 <span
+                            class="text-xl font-semibold text-on-surface-variant">mg/L</span></span>
+                    <span class="font-body-md text-body-md text-tertiary-container font-bold">Stable</span>
+                </div>
+                <div class="mt-4 h-16 w-full opacity-70">
+                    <svg class="w-full h-full chart-glow" preserveaspectratio="none" viewbox="0 0 100 30">
+                        <path d="M0,15 Q20,15 40,12 T70,14 T100,15 L100,30 L0,30 Z" fill="url(#grad1)" opacity="0.3">
+                        </path>
+                        <path d="M0,15 Q20,15 40,12 T70,14 T100,15" fill="none" stroke="#3adccc" stroke-width="2.5">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Impact Section -->
+    <section class="w-full max-w-7xl mx-auto px-grid-margin py-section-gap-mobile md:py-24" id="impact">
+        <div class="text-center mb-16 heading-reveal">
+            <h2 class="font-headline-lg text-headline-lg text-primary mb-6 font-bold">Measurable Impact</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto font-medium">Our platform
+                delivers tangible results for commercial aquaculture operations, turning environmental data into
+                improved yields and sustainability.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div
+                class="bg-white rounded-xl p-8 border border-surface-variant text-center tilt-card reveal-up shadow-sm hover:shadow-md transition-shadow">
+                <div class="text-5xl font-extrabold text-primary mb-2"><span class="counter"
+                        data-target="30">0</span><span class="text-secondary-container">%</span></div>
+                <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wide font-bold">
+                    Increase in Yield</div>
+                <p class="text-sm text-on-surface-variant mt-3">Through optimized feeding and stress-reduction
+                    protocols.</p>
+            </div>
+            <div class="bg-white rounded-xl p-8 border border-surface-variant text-center tilt-card reveal-up shadow-sm hover:shadow-md transition-shadow"
+                style="transition-delay: 0.1s;">
+                <div class="text-5xl font-extrabold text-primary mb-2"><span class="counter"
+                        data-target="15">0</span><span class="text-tertiary-fixed-dim">%</span></div>
+                <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wide font-bold">
+                    Reduced Feed Waste</div>
+                <p class="text-sm text-on-surface-variant mt-3">Algorithmic feeding schedules based on real-time
+                    activity levels.</p>
+            </div>
+            <div class="bg-white rounded-xl p-8 border border-surface-variant text-center tilt-card reveal-up shadow-sm hover:shadow-md transition-shadow"
+                style="transition-delay: 0.2s;">
+                <div class="text-5xl font-extrabold text-primary mb-2"><span class="counter"
+                        data-target="40">0</span><span class="text-secondary-container">%</span></div>
+                <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wide font-bold">Lower
+                    Mortality</div>
+                <p class="text-sm text-on-surface-variant mt-3">Early warning systems for hypoxic events and temperature
+                    spikes.</p>
+            </div>
+            <div class="bg-white rounded-xl p-8 border border-surface-variant text-center tilt-card reveal-up shadow-sm hover:shadow-md transition-shadow"
+                style="transition-delay: 0.3s;">
+                <div class="text-5xl font-extrabold text-primary mb-2"><span class="counter"
+                        data-target="24">0</span><span class="text-tertiary-fixed-dim">/7</span></div>
+                <div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wide font-bold">
+                    Continuous Monitoring</div>
+                <p class="text-sm text-on-surface-variant mt-3">Uninterrupted oversight across all marine farming
+                    enclosures.</p>
+            </div>
+        </div>
+    </section>
+    <!-- Technology Section -->
+    <section class="bg-primary text-white py-section-gap-mobile md:py-24" id="technology">
+        <div class="w-full max-w-7xl mx-auto px-grid-margin">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="heading-reveal">
+                    <span
+                        class="font-label-md text-label-md text-tertiary-fixed-dim font-bold tracking-widest uppercase mb-4 block">Proprietary
+                        Technology</span>
+                    <h2 class="font-headline-lg text-headline-lg mb-6 font-bold text-white">Sub-Surface Intelligence.
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-primary-fixed-dim mb-8 font-medium">
+                        Our hardware is built to withstand the harshest marine environments, providing a continuous
+                        stream of high-fidelity data to our cloud infrastructure.
+                    </p>
+                    <ul class="space-y-6">
+                        <li class="flex items-start reveal-up" style="transition-delay: 0.1s;">
+                            <span class="material-symbols-outlined text-secondary-container mr-4 text-3xl"
+                                style="font-variation-settings: 'FILL' 1;">leak_add</span>
+                            <div>
+                                <h4 class="font-headline-md text-xl font-bold mb-2">Bio-fouling Resistant Sensors</h4>
+                                <p class="text-primary-fixed-dim">Patented nano-coatings ensure sensors remain accurate
+                                    for up to 12 months without manual cleaning or recalibration.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start reveal-up" style="transition-delay: 0.2s;">
+                            <span class="material-symbols-outlined text-tertiary-fixed-dim mr-4 text-3xl"
+                                style="font-variation-settings: 'FILL' 1;">memory</span>
+                            <div>
+                                <h4 class="font-headline-md text-xl font-bold mb-2">Edge Computing</h4>
+                                <p class="text-primary-fixed-dim">Initial data processing happens directly on the buoy,
+                                    ensuring critical alerts are sent even over low-bandwidth satellite connections.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start reveal-up" style="transition-delay: 0.3s;">
+                            <span class="material-symbols-outlined text-secondary-container mr-4 text-3xl"
+                                style="font-variation-settings: 'FILL' 1;">psychology</span>
+                            <div>
+                                <h4 class="font-headline-md text-xl font-bold mb-2">Marine AI Models</h4>
+                                <p class="text-primary-fixed-dim">Machine learning trained specifically on decades of
+                                    oceanographic data to predict localized environmental shifts hours in advance.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div
+                    class="relative reveal-up h-[500px] rounded-xl overflow-hidden bg-primary-container border border-primary-fixed/20 shadow-2xl parallax-wrapper">
+                    <img alt="IoT Sensor Buoy Rendering"
+                        class="parallax-img w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700"
+                        id="tech-img"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdZ--bpyOh6sVW_mVMFaVwWcEUCzPsPrI68S9B2E1JlSrTONwfBs6NEKuRLHnRU-V8FEEcSI2cDN1hTWIaOCr4-FZFRJETJXURNZHt72fjFmvN-oIJjSF4LhbfZHAq-1vu5eB3O13gscHDo33VO6c3g7n3rITDJiLOAHL3P_CVjWz8cceTCUftDS7N-VbaUSTbE5r0zveilscsm0GEdxC-fUiZhzV1incGFrqRxP8ezgI95BTjrVYWrO-ikA313NvLatmO7iucrw" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Intelligence Section -->
+    <section class="w-full max-w-7xl mx-auto px-grid-margin py-section-gap-mobile md:py-24">
+        <div class="text-center mb-20 heading-reveal">
+            <span class="font-label-md text-label-md text-primary font-bold tracking-widest uppercase mb-4 block">Data
+                Flow</span>
+            <h2 class="font-headline-lg text-headline-lg text-primary mb-6 font-bold">Intelligent Architecture</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto font-medium">From the ocean
+                floor to your control center, data flows seamlessly ensuring you always have the clearest picture of
+                your marine ecosystem.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-stretch relative px-4">
+            <!-- Animated Connecting Line (Desktop) -->
+            <div class="hidden lg:block flow-line">
+                <div class="flow-pulse"></div>
+            </div>
+            <!-- Step 1 -->
+            <div class="bg-white rounded-xl p-10 border border-surface-variant text-center relative hover-lift reveal-up z-10 shadow-sm flex flex-col h-full"
+                style="transition-delay: 0.1s;">
+                <div
+                    class="w-20 h-20 mx-auto bg-primary text-white rounded-xl flex items-center justify-center mb-8 shadow-lg transform rotate-3 transition-transform hover:rotate-6">
+                    <span class="material-symbols-outlined"
+                        style="font-size: 40px; font-variation-settings: 'FILL' 1;">sensors</span>
+                </div>
+                <h3 class="font-headline-md text-2xl font-bold text-primary mb-4">1. In-Situ IoT Devices</h3>
+                <p class="font-body-md text-on-surface-variant mb-6 flex-grow font-medium leading-relaxed">Ruggedized
+                    sensors deployed deep in the water column capture granular biometrics, salinity, dissolved oxygen,
+                    and complex current data continuously.</p>
+                <ul
+                    class="text-left text-sm space-y-2 text-on-surface-variant border-t border-surface-variant pt-4 mt-auto">
+                    <li class="flex items-center"><span
+                            class="material-symbols-outlined text-secondary-container mr-2 text-sm">check_circle</span>
+                        Depth-stratified sampling</li>
+                    <li class="flex items-center"><span
+                            class="material-symbols-outlined text-secondary-container mr-2 text-sm">check_circle</span>
+                        Acoustic telemetry</li>
+                </ul>
+            </div>
+            <!-- Step 2 -->
+            <div class="bg-white rounded-xl p-10 border border-surface-variant text-center relative hover-lift reveal-up z-10 shadow-sm flex flex-col h-full"
+                style="transition-delay: 0.2s;">
+                <div
+                    class="w-20 h-20 mx-auto bg-tertiary-container text-tertiary-fixed-dim rounded-xl flex items-center justify-center mb-8 shadow-lg transform -rotate-3 transition-transform hover:-rotate-6">
+                    <span class="material-symbols-outlined"
+                        style="font-size: 40px; font-variation-settings: 'FILL' 1;">cloud_sync</span>
+                </div>
+                <h3 class="font-headline-md text-2xl font-bold text-primary mb-4">2. Fullobster Cloud</h3>
+                <p class="font-body-md text-on-surface-variant mb-6 flex-grow font-medium leading-relaxed">Raw telemetry
+                    is aggregated via satellite or cellular networks, instantly cleaned, and processed using our
+                    proprietary marine-specific machine learning models.</p>
+                <ul
+                    class="text-left text-sm space-y-2 text-on-surface-variant border-t border-surface-variant pt-4 mt-auto">
+                    <li class="flex items-center"><span
+                            class="material-symbols-outlined text-tertiary-container mr-2 text-sm">check_circle</span>
+                        Anomaly detection</li>
+                    <li class="flex items-center"><span
+                            class="material-symbols-outlined text-tertiary-container mr-2 text-sm">check_circle</span>
+                        Predictive modeling</li>
+                </ul>
+            </div>
+            <!-- Step 3 -->
+            <div class="bg-white rounded-xl p-10 border border-surface-variant text-center relative hover-lift reveal-up z-10 shadow-sm flex flex-col h-full"
+                style="transition-delay: 0.3s;">
+                <div
+                    class="w-20 h-20 mx-auto bg-secondary-container text-white rounded-xl flex items-center justify-center mb-8 shadow-lg transform rotate-3 transition-transform hover:rotate-6">
+                    <span class="material-symbols-outlined"
+                        style="font-size: 40px; font-variation-settings: 'FILL' 1;">space_dashboard</span>
+                </div>
+                <h3 class="font-headline-md text-2xl font-bold text-primary mb-4">3. Actionable Dashboard</h3>
+                <p class="font-body-md text-on-surface-variant mb-6 flex-grow font-medium leading-relaxed">Complex
+                    environmental data is translated into an intuitive, actionable interface, providing predictive
+                    alerts before critical biological thresholds are crossed.</p>
+                <ul
+                    class="text-left text-sm space-y-2 text-on-surface-variant border-t border-surface-variant pt-4 mt-auto">
+                    <li class="flex items-center"><span
+                            class="material-symbols-outlined text-secondary mr-2 text-sm">check_circle</span> Multi-site
+                        oversight</li>
+                    <li class="flex items-center"><span
+                            class="material-symbols-outlined text-secondary mr-2 text-sm">check_circle</span> Automated
+                        reporting</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-- Testimonials Section -->
+    <section class="bg-surface-container-low py-section-gap-mobile md:py-24" id="testimonials">
+        <div class="w-full max-w-7xl mx-auto px-grid-margin">
+            <div class="text-center mb-16 heading-reveal">
+                <h2 class="font-headline-lg text-headline-lg text-primary mb-6 font-bold">Trusted by Industry Leaders
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-10 rounded-xl shadow-sm tilt-card reveal-up hover-lift">
+                    <div class="flex text-secondary-container mb-6">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    <p class="text-lg font-medium text-on-surface-variant italic mb-8">"Since implementing the
+                        Fullobster sensor array across our offshore pens, we've reduced feed waste by nearly 20%. The
+                        predictive oxygen alerts saved an entire harvest during the summer upwelling event."</p>
+                    <div class="flex items-center">
+                        <div
+                            class="w-12 h-12 bg-primary-fixed-dim rounded-full flex items-center justify-center text-primary font-bold mr-4">
+                            JB</div>
+                        <div>
+                            <h4 class="font-bold text-primary">Jameson Black</h4>
+                            <p class="text-sm text-outline">Operations Director, Atlantic Crest Aquaculture</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-10 rounded-xl shadow-sm tilt-card reveal-up hover-lift"
+                    style="transition-delay: 0.1s;">
+                    <div class="flex text-secondary-container mb-6">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+                    </div>
+                    <p class="text-lg font-medium text-on-surface-variant italic mb-8">"The durability of the hardware
+                        is unmatched. Other systems we tried fouled within weeks. Fullobster's buoys have been in the
+                        water for 8 months without a single maintenance trip required."</p>
+                    <div class="flex items-center">
+                        <div
+                            class="w-12 h-12 bg-tertiary-fixed-dim rounded-full flex items-center justify-center text-tertiary-container font-bold mr-4">
+                            MR</div>
+                        <div>
+                            <h4 class="font-bold text-primary">Maria Rodriguez</h4>
+                            <p class="text-sm text-outline">Chief Biologist, Pacific Mariculture Systems</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer
+        class="bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline">
+        <div class="w-full px-grid-margin py-16 grid grid-cols-1 md:grid-cols-12 gap-10 max-w-7xl mx-auto">
+            <div class="md:col-span-4 flex flex-col justify-between">
+                <div>
+                    <a class="font-headline-md text-headline-md font-extrabold text-primary mb-4 block" href="#">
+                        Fullobster
+                    </a>
+                    <p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-xs font-medium">
+                        Elevating marine aquaculture through precise, actionable intelligence and thoughtful
+                        stewardship.
+                    </p>
+                </div>
+                <div class="flex space-x-4 mt-4 mb-8 md:mb-0 text-outline">
+                    <a class="hover:text-primary transition-colors hover-lift inline-block" href="#"><span
+                            class="material-symbols-outlined">public</span></a>
+                    <a class="hover:text-primary transition-colors hover-lift inline-block" href="#"><span
+                            class="material-symbols-outlined">mail</span></a>
+                    <a class="hover:text-primary transition-colors hover-lift inline-block" href="#"><span
+                            class="material-symbols-outlined">share</span></a>
+                </div>
+            </div>
+            <div class="md:col-span-2 md:col-start-6">
+                <h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-6 font-bold">Platform
+                </h4>
+                <ul class="space-y-4">
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Features</a></li>
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Hardware</a></li>
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Integrations</a></li>
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="md:col-span-2">
+                <h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-6 font-bold">Company
+                </h4>
+                <ul class="space-y-4">
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">About Us</a></li>
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Careers</a></li>
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Case Studies</a></li>
+                    <li><a class="font-body-md text-sm font-medium text-on-surface-variant hover:text-secondary-container transition-colors"
+                            href="#">Contact</a></li>
+                </ul>
+            </div>
+            <!-- Newsletter Signup -->
+            <div class="md:col-span-3">
+                <h4 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-6 font-bold">Stay
+                    Updated</h4>
+                <p class="text-sm text-on-surface-variant mb-4 font-medium">Subscribe to our newsletter for the latest
+                    in aquaculture tech.</p>
+                <form class="flex flex-col space-y-3">
+                    <input
+                        class="px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm font-medium placeholder-outline"
+                        placeholder="Enter your email" type="email" />
+                    <button
+                        class="bg-primary text-white font-semibold text-sm px-4 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+                        type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="w-full border-t border-outline-variant py-6 px-grid-margin">
+            <div
+                class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm text-outline font-medium">
+                <p>© 2024 Fullobster Technology Group. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                    <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+                    <a class="hover:text-primary transition-colors" href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Interactive Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Reveal Animation (Staggered Sections & Headings)
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+
+                        // Counter animation logic when revealing impact cards
+                        if (entry.target.querySelector('.counter')) {
+                            const counter = entry.target.querySelector('.counter');
+                            if (!counter.classList.contains('counted')) {
+                                const target = +counter.getAttribute('data-target');
+                                animateCounter(counter, target, 1500);
+                                counter.classList.add('counted');
+                            }
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-up, .heading-reveal').forEach((element) => {
+                observer.observe(element);
+            });
+
+            // Counter Function
+            function animateCounter(el, target, duration) {
+                let start = 0;
+                const increment = target / (duration / 16); // 60fps
+                const timer = setInterval(() => {
+                    start += increment;
+                    if (start >= target) {
+                        el.innerText = target;
+                        clearInterval(timer);
+                    } else {
+                        el.innerText = Math.floor(start);
+                    }
+                }, 16);
+            }
+
+            // Nav Scroll Effect
+            const nav = document.getElementById('main-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('nav-scrolled');
+                    nav.classList.remove('bg-transparent', 'backdrop-blur-md');
+                } else {
+                    nav.classList.remove('nav-scrolled');
+                    nav.classList.add('bg-transparent', 'backdrop-blur-md');
+                }
+            });
+
+            // Generate Background Bubbles
+            const bubblesContainer = document.getElementById('bubbles');
+            if (bubblesContainer) {
+                for (let i = 0; i < 20; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    const size = Math.random() * 30 + 10;
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.left = `${Math.random() * 100}%`;
+                    bubble.style.animationDuration = `${Math.random() * 8 + 4}s`;
+                    bubble.style.animationDelay = `${Math.random() * 5}s`;
+                    bubblesContainer.appendChild(bubble);
+                }
+            }
+
+            // 3D Tilt Effect
+            const tiltCards = document.querySelectorAll('.tilt-card');
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -10;
+                    const rotateY = ((x - centerX) / centerX) * 10;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
+
+            // Magnetic Button Effect
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', e => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = `translate(0px, 0px)`;
+                });
+            });
+
+            // Parallax Scroll Effect
+            const techImg = document.getElementById('tech-img');
+            if (techImg) {
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    const rect = techImg.getBoundingClientRect();
+                    const offsetTop = techImg.parentElement.offsetTop;
+                    // Only animate if in viewport approximately
+                    if (scrollY + window.innerHeight > offsetTop && scrollY < offsetTop + window.innerHeight) {
+                        const parallaxValue = (scrollY - offsetTop) * 0.15;
+                        techImg.style.transform = `scale(1.1) translateY(${parallaxValue}px)`;
+                    }
+                });
+            }
+
+            // Trigger initial reveal for elements in view
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-up, .heading-reveal').forEach((el) => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('active');
+                        if (el.querySelector('.counter')) {
+                            const counter = el.querySelector('.counter');
+                            if (!counter.classList.contains('counted')) {
+                                const target = +counter.getAttribute('data-target');
+                                animateCounter(counter, target, 1500);
+                                counter.classList.add('counted');
+                            }
+                        }
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>
