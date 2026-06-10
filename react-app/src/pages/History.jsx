@@ -19,7 +19,7 @@ const History = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/history');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/history`);
         if (!response.ok) throw new Error('Network response was not ok');
         const jsonData = await response.json();
         setData(jsonData);

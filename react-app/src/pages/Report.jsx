@@ -12,7 +12,7 @@ const Report = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/report');
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/report`);
         if (!response.ok) throw new Error('Network response was not ok');
         const jsonData = await response.json();
         setData(jsonData);
