@@ -2,54 +2,102 @@ import sqlite3
 import threading
 import time
 from datetime import datetime, timedelta
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+def get_status(ph, tds, suhu, oksigen):
+    issues = []
+    if ph < 6.5 or ph > 8.5:
+        issues.append("pH")
+    if tds > 300:
+        issues.append("TDS")
+    if suhu < 25.0 or suhu > 30.0:
+        issues.append("Suhu")
+    if oksigen < 6.0:
+        issues.append("Oksigen")
+        
+    if len(issues) == 0:
+        return "Ideal", "Kondisi Ideal", "Lingkungan optimal untuk pertumbuhan.", "check_circle", "text-green-500"
+    elif len(issues) >= 3:
+        return "Bahaya", "Kondisi Bahaya", f"Banyak parameter kritis ({', '.join(issues)}). Segera lakukan tindakan!", "warning", "text-red-500"
+    else:
+        return "Perlu Perhatian", "Perlu Perhatian", f"Parameter {', '.join(issues)} di luar batas optimal.", "info", "text-yellow-500"
 
-from utils import get_realistic_point, get_status, get_score, get_trend_info
+def get_score(ph, tds, suhu, oksigen):
+    score = 100
+    if ph < 6.5 or ph > 8.5:
+        score -= 15
+    if tds > 300:
+        score -= 15
+    if suhu < 25.0 or suhu > 30.0:
+        score -= 15
+    if oksigen < 6.0:
+        score -= 15
+    
+    return max(0, min(100, score))
+
+def get_trend_info(diff, is_inverse_good=False):
+    if diff > 0:
+        color = "text-red-500" if is_inverse_good else "text-green-500"
+        diff_str = f"+{diff}" if isinstance(diff, int) else f"+{diff:.1f}"
+        return "trending_up", f"{diff_str} vs 1 jam lalu", color
+    elif diff < 0:
+        color = "text-green-500" if is_inverse_good else "text-red-500"
+        diff_str = f"{diff}" if isinstance(diff, int) else f"{diff:.1f}"
+        return "trending_down", f"{diff_str} vs 1 jam lalu", color
+    else:
+        return "trending_flat", "Stabil", "text-gray-500"
 
 app = Flask(__name__)
 CORS(app)
 
 DB_PATH = 'sensor_data.db'
 
-def insert_sensor_data_loop():
-    """Background worker that generates and inserts new sensor data every 5 seconds."""
-    while True:
-        try:
-            now = datetime.now()
-            ph, tds, suhu, oksigen = get_realistic_point(now, add_noise=True)
-            score = get_score(ph, tds, suhu, oksigen)
-            short_status, _, _, _, _ = get_status(ph, tds, suhu, oksigen)
+@app.route('/api/sensor', methods=['POST'])
+def receive_sensor_data():
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
             
-            conn = sqlite3.connect(DB_PATH)
-            cursor = conn.cursor()
-            cursor.execute('''
-            CREATE TABLE IF NOT EXISTS sensor_data (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp DATETIME NOT NULL,
-                ph REAL NOT NULL,
-                tds INTEGER NOT NULL,
-                suhu REAL NOT NULL,
-                oksigen REAL NOT NULL,
-                score INTEGER NOT NULL,
-                status TEXT NOT NULL
-            )
-            ''')
+        ph = data.get('ph')
+        tds = data.get('tds')
+        suhu = data.get('suhu')
+        oksigen = data.get('oksigen')
+        
+        if ph is None or tds is None or suhu is None or oksigen is None:
+            return jsonify({"error": "Missing sensor parameters"}), 400
             
-            cursor.execute('''
-            INSERT INTO sensor_data (timestamp, ph, tds, suhu, oksigen, score, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (now.strftime('%Y-%m-%d %H:%M:%S'), ph, tds, suhu, oksigen, score, short_status))
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            print("Background worker error:", e)
-            
-        time.sleep(5)
-
-# Start background thread
-worker_thread = threading.Thread(target=insert_sensor_data_loop, daemon=True)
-worker_thread.start()
+        now = datetime.now()
+        score = get_score(ph, tds, suhu, oksigen)
+        short_status, _, _, _, _ = get_status(ph, tds, suhu, oksigen)
+        
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS sensor_data (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp DATETIME NOT NULL,
+            ph REAL NOT NULL,
+            tds INTEGER NOT NULL,
+            suhu REAL NOT NULL,
+            oksigen REAL NOT NULL,
+            score INTEGER NOT NULL,
+            status TEXT NOT NULL
+        )
+        ''')
+        
+        cursor.execute('''
+        INSERT INTO sensor_data (timestamp, ph, tds, suhu, oksigen, score, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (now.strftime('%Y-%m-%d %H:%M:%S'), ph, tds, suhu, oksigen, score, short_status))
+        conn.commit()
+        conn.close()
+        
+        return jsonify({"message": "Data saved successfully", "status": "success"}), 201
+    except Exception as e:
+        print("Error saving sensor data:", e)
+        return jsonify({"error": str(e)}), 500
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
@@ -61,7 +109,6 @@ def get_dashboard_data():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Get latest data (T-0)
     cursor.execute('SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 1')
     latest = cursor.fetchone()
     
@@ -76,7 +123,6 @@ def get_dashboard_data():
     
     short_status, class_status, class_desc, class_icon, class_color = get_status(c_ph, c_tds, c_suhu, c_oksigen)
     
-    # Get data from exactly 1 hour ago
     now_str = latest['timestamp']
     dt_now = datetime.strptime(now_str, '%Y-%m-%d %H:%M:%S')
     dt_1h_ago = dt_now - timedelta(hours=1)
@@ -98,7 +144,6 @@ def get_dashboard_data():
     suhu_icon, suhu_text, suhu_color = get_trend_info(suhu_diff, is_inverse_good=True)
     ox_icon, ox_text, ox_color = get_trend_info(oksigen_diff, is_inverse_good=False)
 
-    # Get recent history data (last 5 records)
     cursor.execute('SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 5')
     recent_rows = cursor.fetchall()
     history = []
@@ -112,7 +157,6 @@ def get_dashboard_data():
             "oksigen": row['oksigen'],
             "status": row['status']
         })
-    # Trend Data (24h in 2-hour intervals = 12 points)
     trend_data = []
     for i in range(12, -1, -1):
         target_dt = dt_now - timedelta(hours=i*2)
@@ -259,7 +303,6 @@ def get_report_data():
     dt_now = datetime.now()
     today_idx = dt_now.weekday()
     
-    # 7-day rolling window ending today
     for i in range(6, -1, -1):
         day_idx = (today_idx - i) % 7
         name = "Hari Ini" if i == 0 else days[day_idx]

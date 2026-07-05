@@ -1,0 +1,15 @@
+CLAUDE.md
+REVISI.md
+node_modules/
+dokumen hki.docx
+dokumen hki.pdf
+dokumen hki (revisi).html
+generate_hki.py
+*.pyc
+__pycache__/
+.env
+.env.local
+*.log
+simulator.py
+sensor_data.db
+utils.py
