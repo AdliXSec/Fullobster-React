@@ -1,9 +1,44 @@
-import React, { useState } from 'react';
-import { useLocation, NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const TopBar = () => {
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const applyTheme = (isDarkTheme) => {
+      setIsDark(isDarkTheme);
+      if (isDarkTheme) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    // Initialize based on system preference or current class
+    if (document.documentElement.classList.contains('dark') || mediaQuery.matches) {
+      applyTheme(true);
+    } else {
+      applyTheme(false);
+    }
+
+    // Listen for system theme changes
+    const handleChange = (e) => applyTheme(e.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDark(!isDark);
+    if (!isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
   
   let pageTitle = 'Dashboard';
   let showMonitoringStatus = false;
@@ -17,63 +52,50 @@ const TopBar = () => {
   }
 
   return (
-    <header id="top-bar" className="h-16 sticky top-0 z-40 bg-surface-bright border-b border-outline-variant flex items-center justify-between px-gutter sidebar-transition relative">
-      <div className="flex items-center gap-2 md:gap-4">
-        {/* Mobile Hamburger Menu */}
-        <button 
-          className="md:hidden text-outline hover:text-primary p-1 -ml-1 rounded-md"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          <span className="material-symbols-outlined">{isMobileMenuOpen ? 'close' : 'menu'}</span>
-        </button>
-        <span className="text-primary font-headline-md text-headline-md font-semibold">{pageTitle}</span>
+    <header className="flex items-center justify-between py-3 px-4 z-40 transition-all duration-200">
+      <div className="flex items-center gap-4">
+        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">{pageTitle}</h1>
         {showMonitoringStatus && (
-          <div className="hidden md:flex items-center gap-2 text-primary font-semibold text-sm">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+          <div className="hidden md:flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium text-sm glass-panel px-4 py-1.5 rounded-full">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            Monitoring Active
+            Active
           </div>
         )}
       </div>
-      <div className="flex items-center gap-2 md:gap-4">
+      
+      <div className="flex items-center gap-3">
+        {/* Search */}
         <div className="relative hidden md:block">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
-          <input className="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full font-body-md text-body-md focus:ring-2 focus:ring-primary w-64 text-on-surface" placeholder="Search..." type="text"/>
+          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-[18px]">search</span>
+          <input 
+            className="pl-11 pr-4 py-1.5 glass-panel text-slate-700 dark:text-slate-200 placeholder-slate-400 rounded-full font-body-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 w-64 transition-all duration-300" 
+            placeholder="Search..." 
+            type="text"
+          />
         </div>
-        <button className="text-outline hover:text-primary-container transition-colors p-2 rounded-full hover:bg-surface-container-low">
-          <span className="material-symbols-outlined" data-icon="notifications">notifications</span>
+        
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleDarkMode}
+          className="glass-panel text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:text-blue-400 transition-all duration-300 w-9 h-9 rounded-full flex items-center justify-center ml-2"
+          title="Toggle Dark Mode"
+        >
+          <span className="material-symbols-outlined text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
         </button>
-        <div className="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold font-body-md shadow-sm border border-outline-variant cursor-pointer ml-2">
+
+        {/* Notifications */}
+        <button className="glass-panel text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:text-blue-400 transition-all duration-300 w-9 h-9 rounded-full flex items-center justify-center">
+          <span className="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+        </button>
+        
+        {/* Profile */}
+        <div className="w-9 h-9 rounded-full glass-panel text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm shadow-sm cursor-pointer transition-all duration-300 hover:bg-white/80 dark:hover:bg-slate-800/80">
           LC
         </div>
-        <button className="hidden md:block text-outline font-label-sm text-label-sm hover:text-primary transition-colors cursor-pointer active:opacity-80">Logout</button>
       </div>
-
-      {/* Mobile Navigation Dropdown */}
-      {isMobileMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-surface-container-lowest border-b border-outline-variant shadow-lg md:hidden flex flex-col p-4 gap-2 z-50">
-          <NavLink to="/" onClick={() => setIsMobileMenuOpen(false)} className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg font-body-md ${isActive ? 'bg-primary-container text-primary font-bold' : 'text-outline hover:bg-surface-container-low'}`}>
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>dashboard</span>
-            Dashboard
-          </NavLink>
-          <NavLink to="/history" onClick={() => setIsMobileMenuOpen(false)} className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg font-body-md ${isActive ? 'bg-primary-container text-primary font-bold' : 'text-outline hover:bg-surface-container-low'}`}>
-            <span className="material-symbols-outlined">history</span>
-            Riwayat Data
-          </NavLink>
-          <NavLink to="/report" onClick={() => setIsMobileMenuOpen(false)} className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-lg font-body-md ${isActive ? 'bg-primary-container text-primary font-bold' : 'text-outline hover:bg-surface-container-low'}`}>
-            <span className="material-symbols-outlined">analytics</span>
-            Laporan
-          </NavLink>
-          <div className="border-t border-outline-variant my-2 pt-2">
-            <button className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-lg font-body-md text-outline hover:bg-surface-container-low">
-              <span className="material-symbols-outlined">logout</span>
-              Logout
-            </button>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

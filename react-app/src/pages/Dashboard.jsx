@@ -23,215 +23,193 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchData();
-    // Refresh data every 5 seconds for dummy live effect
     const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
   }, []);
 
+  const glassBase = "bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/80 dark:border-slate-700/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)]";
+  const bentoLarge = `${glassBase} rounded-[32px]`;
+  const bentoSmall = `${glassBase} rounded-[24px]`;
+
   if (loading) {
     return (
-      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <main className="flex-1 flex flex-col justify-center items-center h-full p-6">
+        <div className={`w-full max-w-lg ${bentoLarge} p-8 flex flex-col items-center justify-center animate-pulse`}>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <div className="text-slate-500 dark:text-slate-400 dark:text-slate-500">Memuat data dashboard...</div>
+        </div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
-        <div className="text-error bg-error-container p-4 rounded-lg">Error loading data: {error}</div>
+      <main className="flex-1 flex justify-center items-center h-full p-6">
+        <div className="bg-rose-50 dark:bg-rose-900/30 border border-rose-200 rounded-[32px] p-8 shadow-sm max-w-lg">
+          <div className="flex items-center gap-3 mb-2 text-rose-600 dark:text-rose-400">
+            <span className="material-symbols-outlined">error</span>
+            <h3 className="font-semibold text-lg">Error Loading Data</h3>
+          </div>
+          <p className="text-rose-600 dark:text-rose-400/80">{error}</p>
+        </div>
       </main>
     );
   }
 
-  let classBg = "bg-primary-fixed";
-  let classText = "text-on-primary-fixed";
-  let classIconBg = "bg-primary";
-  let classIconColor = "text-on-primary";
+  // Hero classification colors
+  let heroTheme = "from-blue-50/50 to-indigo-50/50 dark:from-blue-900/20 dark:to-indigo-900/20";
+  let heroIconTheme = "text-blue-500 dark:text-blue-400 bg-blue-100/50 dark:bg-blue-900/40";
   
   if (data.classification.status === "Kondisi Bahaya") {
-    classBg = "bg-error-container";
-    classText = "text-on-error-container";
-    classIconBg = "bg-error";
-    classIconColor = "text-on-error";
+    heroTheme = "from-rose-50/50 to-red-50/50 dark:from-rose-900/20 dark:to-red-900/20";
+    heroIconTheme = "text-rose-500 dark:text-rose-400 bg-rose-100/50 dark:bg-rose-900/40";
   } else if (data.classification.status === "Perlu Perhatian") {
-    classBg = "bg-[#FFF4E5]"; 
-    classText = "text-[#B26A00]"; 
-    classIconBg = "bg-[#FFA726]";
-    classIconColor = "text-white";
+    heroTheme = "from-amber-50/50 to-orange-50/50 dark:from-amber-900/20 dark:to-orange-900/20";
+    heroIconTheme = "text-amber-500 dark:text-amber-400 bg-amber-100/50 dark:bg-amber-900/40";
   }
 
   return (
-    <main className="p-container-margin flex-1" id="main-content">
-      <div className="mb-stack-md flex items-center justify-between">
-        <h2 className="font-headline-lg text-headline-lg text-on-surface">Real-time Monitoring</h2>
-        <span className="text-outline text-body-md">Terakhir diperbarui: Baru saja</span>
+    <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full" id="main-content">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-7 gap-4 px-2">
+        <div>
+          <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Dashboard Kualitas Air</h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Real-time Monitoring</p>
+        </div>
       </div>
       
-      {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-md">
-        {data.metrics.map((metric, index) => {
-           const colorClasses = {
-             ph: { icon: 'text-primary', bg: 'bg-primary', bar: 'bg-primary w-[70%]' },
-             tds: { icon: 'text-secondary', bg: 'bg-secondary', bar: 'bg-secondary w-[40%]' },
-             suhu: { icon: 'text-tertiary', bg: 'bg-tertiary', bar: 'bg-tertiary w-[80%]' },
-             oksigen: { icon: 'text-primary-container', bg: 'bg-primary-container', bar: 'bg-primary-container w-[65%]' }
-           };
-           const theme = colorClasses[metric.id] || colorClasses.ph;
-
-           return (
-            <div key={metric.id} className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col gap-3 relative overflow-hidden">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-2 text-outline">
-                  <span className={`material-symbols-outlined ${theme.icon}`}>{metric.icon}</span>
-                  <span className="font-body-md">{metric.title}</span>
-                </div>
-                {metric.subtitle && (
-                  metric.id === 'ph' ? 
-                  <span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full font-medium">{metric.subtitle}</span> :
-                  <span className="text-outline text-xs">{metric.subtitle}</span>
-                )}
-              </div>
-              <div className="font-display-metrics text-display-metrics text-on-surface">{metric.value}</div>
-              <div className={`flex items-center gap-1 ${metric.trendColor} text-sm font-medium`}>
-                <span className="material-symbols-outlined text-sm">{metric.trendIcon}</span>
-                <span className="">{metric.trendText}</span>
-              </div>
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-surface-container-low">
-                <div className={`h-full ${theme.bar}`}></div>
-              </div>
-            </div>
-           );
-        })}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-stack-md">
-        {/* Classification Result */}
-        <div className={`${classBg} p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] lg:col-span-1 flex flex-col justify-center transition-colors duration-300`}>
-          <h3 className={`font-headline-md text-headline-md ${classText} mb-4`}>{data.classification.title}</h3>
-          <div className="flex items-center gap-4 mb-4">
-            <div className={`w-16 h-16 rounded-full ${classIconBg} flex items-center justify-center transition-colors duration-300`}>
-              <span className={`material-symbols-outlined ${classIconColor} text-3xl`}>{data.classification.icon}</span>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-2">
+        
+        {/* Bento Item 1: Hero Classification (Slim Banner) */}
+        <div className={`col-span-12 py-4 px-6 md:px-8 ${bentoLarge} bg-gradient-to-r ${heroTheme} flex flex-col sm:flex-row items-start sm:items-center justify-between relative overflow-hidden gap-4`}>
+          <div className="relative z-10 flex items-center gap-5">
+            <div className={`w-14 h-14 rounded-full ${heroIconTheme} flex items-center justify-center shadow-sm backdrop-blur-md flex-shrink-0`}>
+              <span className="material-symbols-outlined text-3xl">{data.classification.icon}</span>
             </div>
             <div>
-              <div className={`font-display-metrics text-2xl ${classText} mb-1`}>{data.classification.status}</div>
-              <div className={`${classText} opacity-90 text-sm`}>{data.classification.description}</div>
+              <div className="flex items-center gap-3 mb-0.5">
+                <h3 className="text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium text-xs uppercase tracking-wider">{data.classification.title}</h3>
+                <span className="px-2 py-0.5 rounded-full bg-white/50 dark:bg-slate-900/50 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-sm backdrop-blur-sm">{data.classification.status}</span>
+              </div>
+              <p className="text-slate-800 dark:text-slate-100 text-base font-semibold leading-snug">{data.classification.description}</p>
             </div>
           </div>
+          {/* Abstract soft glow */}
+          <div className="absolute right-0 top-0 w-64 h-full bg-white/40 dark:bg-slate-900/40 blur-2xl rounded-full pointer-events-none transform translate-x-1/2"></div>
         </div>
-        
-        {/* Chart Placeholder (Mockup) */}
-        <div className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] lg:col-span-2 flex flex-col">
-          
-          {/* Node Flow Header & Status */}
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-body-lg text-body-lg text-on-surface font-semibold">Alur Data Sensor</h3>
-            <div className="flex items-center gap-2 px-2.5 py-1 bg-[#E6F4EA] text-[#137333] rounded-full text-xs font-bold border border-[#137333]/20">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#137333] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#137333]"></span>
-              </span>
-              System Active
-            </div>
-          </div>
 
-          {/* Data Flow Animation Container */}
-          <div className="mb-6 w-full overflow-x-auto pb-2 scrollbar-thin">
-            <div className="min-w-[480px] relative h-24 flex items-center justify-between px-8 bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/30">
-              {/* Connecting Line SVG */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-                <line className="text-outline-variant flow-line" stroke="currentColor" strokeWidth="2" x1="15%" x2="50%" y1="50%" y2="50%"></line>
-                <line className="text-outline-variant flow-line" stroke="currentColor" strokeWidth="2" x1="50%" x2="85%" y1="50%" y2="50%"></line>
-                {/* Animated Packets */}
-                <circle className="text-primary data-packet" fill="currentColor" r="4"></circle>
-                <circle className="text-secondary data-packet-2" fill="currentColor" r="4"></circle>
-              </svg>
-              
-              {/* Node 1: IoT Device */}
-              <div className="flex flex-col items-center gap-2 z-10 node-pulse bg-surface-container-lowest p-2 rounded-lg shadow-sm border border-outline-variant w-[110px] text-center">
-                <div className="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container">
-                  <span className="material-symbols-outlined">sensors</span>
+        {/* Bento Item 2: KPI Grid */}
+        <div className="col-span-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {data.metrics.map((metric) => {
+            const isError = metric.trendColor.includes('error');
+            const iconColor = isError ? 'text-rose-500 dark:text-rose-400' : 'text-blue-500 dark:text-blue-400';
+            const iconBg = isError ? 'bg-rose-50 dark:bg-rose-900/30' : 'bg-blue-50 dark:bg-blue-900/30';
+
+            return (
+              <div key={metric.id} className={`${bentoSmall} p-5 flex flex-col justify-between hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] transition-shadow group`}>
+                <div className={`w-10 h-10 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center mb-4 transition-transform group-hover:scale-105`}>
+                  <span className="material-symbols-outlined">{metric.icon}</span>
                 </div>
-                <span className="text-label-sm text-on-surface-variant font-semibold leading-tight">IoT Device</span>
-              </div>
-              
-              {/* Node 2: Python Service */}
-              <div className="flex flex-col items-center gap-2 z-10 node-pulse-delayed bg-surface-container-lowest p-2 rounded-lg shadow-sm border border-outline-variant w-[110px] text-center">
-                <div className="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
-                  <span className="material-symbols-outlined">dns</span>
+                <div>
+                  <div className="text-2xl font-bold tabular-nums text-slate-800 dark:text-slate-100 mb-0.5">{metric.value}</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium">{metric.title}</div>
                 </div>
-                <span className="text-label-sm text-on-surface-variant font-semibold leading-tight">Python Service</span>
               </div>
-              
-              {/* Node 3: User Interface */}
-              <div className="flex flex-col items-center gap-2 z-10 node-pulse bg-surface-container-lowest p-2 rounded-lg shadow-sm border border-outline-variant w-[110px] text-center">
-                <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
-                  <span className="material-symbols-outlined">monitor</span>
-                </div>
-                <span className="text-label-sm text-on-surface-variant font-semibold leading-tight">User Interface</span>
-              </div>
-            </div>
+            );
+          })}
+        </div>
+
+        {/* Bento Item 3: Trend Chart */}
+        <div className={`col-span-12 md:col-span-8 p-8 ${bentoLarge} flex flex-col`}>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Analisis Kualitas Air (24j)</h3>
           </div>
-          
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-body-lg text-body-lg text-on-surface font-semibold">Tren Kualitas Air (24 Jam)</h3>
-            <button className="text-primary text-sm font-medium hover:underline">Lihat Detail</button>
-          </div>
-          <div className="h-48 w-full rounded bg-surface-container-lowest flex items-end pb-2 pt-4">
+          <div className="flex-1 min-h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data.trend} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#c3c6d6" opacity={0.5} />
-                <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 10, fontFamily: 'Inter' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737685', fontSize: 10, fontFamily: 'Inter' }} domain={[0, 100]} ticks={[0, 50, 100]} />
-                <RechartsTooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e1e2e4', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} itemStyle={{ fontFamily: 'Inter', fontSize: 12 }} labelStyle={{ fontFamily: 'Inter', fontSize: 10, color: '#737685', marginBottom: 4 }} />
-                <ReferenceLine y={80} stroke="#137333" strokeDasharray="4 4" />
-                <Line type="monotone" dataKey="score" stroke="#003d9b" strokeWidth={2} dot={{ r: 3, fill: '#003d9b', strokeWidth: 0 }} activeDot={{ r: 5, strokeWidth: 0 }} />
+              <LineChart data={data.trend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} domain={[0, 100]} />
+                <RechartsTooltip 
+                  contentStyle={{ backgroundColor: 'rgba(255,255,255,0.9)', border: '1px solid #e2e8f0', borderRadius: '16px', backdropFilter: 'blur(10px)', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} 
+                  itemStyle={{ fontSize: 14, color: '#1e293b', fontWeight: 'bold' }} 
+                  labelStyle={{ fontSize: 12, color: '#64748b', marginBottom: 8 }} 
+                />
+                <ReferenceLine y={80} stroke="#94a3b8" strokeDasharray="4 4" />
+                <Line type="monotone" dataKey="score" stroke="#3b82f6" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: '#3b82f6', strokeWidth: 2, stroke: '#fff' }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
-      </div>
 
-      {/* Data Table */}
-      <div className="bg-surface-container-lowest p-card-padding rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
-        <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Riwayat Data</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-outline-variant font-label-sm text-outline">
-                <th className="py-3 px-4 font-semibold">Timestamp</th>
-                <th className="py-3 px-4 font-semibold">pH Air</th>
-                <th className="py-3 px-4 font-semibold">TDS (mg/L)</th>
-                <th className="py-3 px-4 font-semibold">Suhu (°C)</th>
-                <th className="py-3 px-4 font-semibold">Oksigen (mg/L)</th>
-                <th className="py-3 px-4 font-semibold">Status</th>
-              </tr>
-            </thead>
-            <tbody className="text-body-md text-on-surface">
-              {data.history.map((row, index) => {
-                let statusBadge = "";
-                if (row.status === "Ideal") {
-                  statusBadge = <span className="bg-primary-fixed text-on-primary-fixed text-xs px-2 py-1 rounded-full">Ideal</span>;
-                } else if (row.status === "Bahaya") {
-                  statusBadge = <span className="bg-error text-on-error text-xs px-2 py-1 rounded-full">Bahaya</span>;
-                } else {
-                  statusBadge = <span className="bg-error-container text-on-error-container text-xs px-2 py-1 rounded-full">Perlu Perhatian</span>;
-                }
-
-                return (
-                  <tr key={index} className="border-b border-surface-variant hover:bg-surface-container-low transition-colors">
-                    <td className="py-3 px-4 text-outline">{row.timestamp}</td>
-                    <td className={`py-3 px-4 font-medium ${row.ph < 6.5 || row.ph > 8.5 ? 'text-error' : ''}`}>{row.ph}</td>
-                    <td className={`py-3 px-4 ${row.tds > 300 ? 'text-error' : ''}`}>{row.tds}</td>
-                    <td className={`py-3 px-4 ${row.suhu < 25.0 || row.suhu > 30.0 ? 'text-error' : ''}`}>{row.suhu}</td>
-                    <td className={`py-3 px-4 ${row.oksigen < 6.0 ? 'text-error' : ''}`}>{row.oksigen}</td>
-                    <td className="py-3 px-4">{statusBadge}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        {/* Bento Item 4: Data Flow */}
+        <div className={`col-span-12 md:col-span-4 p-8 ${bentoLarge} flex flex-col`}>
+          <div className="mb-8">
+             <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Alur Data</h3>
+             <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">Status koneksi sistem</p>
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center gap-6 relative">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-3/4 bg-slate-100 dark:bg-slate-700/50 rounded-full"></div>
+            
+            <div className="z-10 flex items-center gap-4 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full px-6 py-3 w-full max-w-[200px] justify-center transition-opacity duration-1000">
+              <span className="material-symbols-outlined text-blue-500 dark:text-blue-400">sensors</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">IoT Device</span>
+            </div>
+            
+            <div className="z-10 flex items-center gap-4 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full px-6 py-3 w-full max-w-[200px] justify-center transition-opacity duration-1000 delay-150">
+              <span className="material-symbols-outlined text-indigo-500 dark:text-indigo-400">dns</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">Server</span>
+            </div>
+            
+            <div className="z-10 flex items-center gap-4 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full px-6 py-3 w-full max-w-[200px] justify-center transition-opacity duration-1000 delay-300">
+              <span className="material-symbols-outlined text-sky-500 dark:text-sky-400">monitor</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">Dashboard</span>
+            </div>
+          </div>
         </div>
+
+        {/* Bento Item 5: History Table */}
+        <div className={`col-span-12 p-8 ${bentoLarge}`}>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6">Riwayat Data</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm">
+                  <th className="py-4 px-4 font-medium whitespace-nowrap">Waktu</th>
+                  <th className="py-4 px-4 font-medium">pH Air</th>
+                  <th className="py-4 px-4 font-medium">TDS (mg/L)</th>
+                  <th className="py-4 px-4 font-medium">Suhu (°C)</th>
+                  <th className="py-4 px-4 font-medium">Oksigen (mg/L)</th>
+                  <th className="py-4 px-4 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody className="text-slate-700 dark:text-slate-200">
+                {data.history.map((row, index) => {
+                  let statusBadge = "";
+                  if (row.status === "Ideal") {
+                    statusBadge = <span className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-medium">Ideal</span>;
+                  } else if (row.status === "Bahaya") {
+                    statusBadge = <span className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 px-3 py-1 rounded-full text-xs font-medium">Bahaya</span>;
+                  } else {
+                    statusBadge = <span className="bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-full text-xs font-medium">Perhatian</span>;
+                  }
+
+                  return (
+                    <tr key={index} className="border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50/50 transition-colors">
+                      <td className="py-4 px-4 text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm tabular-nums whitespace-nowrap">{row.timestamp}</td>
+                      <td className="py-4 px-4 font-medium tabular-nums">{row.ph}</td>
+                      <td className="py-4 px-4 tabular-nums">{row.tds}</td>
+                      <td className="py-4 px-4 tabular-nums">{row.suhu}</td>
+                      <td className="py-4 px-4 tabular-nums">{row.oksigen}</td>
+                      <td className="py-4 px-4">{statusBadge}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </main>
   );

@@ -1,45 +1,75 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Sidebar = ({ toggleSidebar }) => {
+const Sidebar = () => {
   return (
-    <aside id="sidebar" className="hidden md:flex bg-surface-container-lowest w-[sidebar-width] h-screen fixed left-0 top-0 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex-col py-6 z-50 sidebar-transition">
-      <div className="px-5 mb-8 flex items-center justify-between gap-3 logo-container sidebar-transition">
-        <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-primary text-3xl flex-shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>water_drop</span>
-          <div className="logo-text sidebar-text-transition whitespace-nowrap">
-            <h1 className="font-headline-md text-headline-md text-primary">Lobster Care</h1>
-            <p className="font-label-sm text-label-sm text-outline">Aquaculture IoT</p>
-          </div>
+    <aside className="glass-panel rounded-[32px] h-full flex flex-col items-center py-4 w-20 flex-shrink-0 z-50">
+      {/* Logo */}
+      <div className="flex items-center justify-center mb-8">
+        <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+          <span className="material-symbols-outlined text-white text-[24px]" data-icon="water_drop">water_drop</span>
         </div>
-        <button className="text-outline hover:bg-surface-container-low p-1 rounded-md transition-colors" id="toggle-sidebar" title="Toggle Sidebar" onClick={toggleSidebar}>
-          <span className="material-symbols-outlined icon-menu">menu</span>
-        </button>
       </div>
 
-      <nav className="flex-1 flex flex-col gap-2">
-        <NavLink to="/" className={({ isActive }) => `flex items-center gap-3 transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item ${isActive ? 'bg-primary-container text-primary font-bold border-l-4 border-primary' : 'text-outline hover:bg-surface-container-low'}`}>
-          <span className="material-symbols-outlined flex-shrink-0" data-icon="dashboard" style={{ fontVariationSettings: "'FILL' 1" }}>dashboard</span>
-          <span className="sidebar-text sidebar-text-transition whitespace-nowrap">Dashboard</span>
+      {/* Navigation */}
+      <nav className="flex-1 flex flex-col gap-3 items-center w-full px-4">
+        <NavLink 
+          to="/" 
+          className={({ isActive }) => 
+            `flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 ${
+              isActive 
+                ? 'bg-blue-500/10 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 shadow-sm' 
+                : 'text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 dark:hover:bg-slate-800/50 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300'
+            }`
+          }
+          title="Dashboard"
+        >
+          <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>dashboard</span>
         </NavLink>
-        <NavLink to="/history" className={({ isActive }) => `flex items-center gap-3 transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item ${isActive ? 'bg-primary-container text-primary font-bold border-l-4 border-primary' : 'text-outline hover:bg-surface-container-low'}`}>
-          <span className="material-symbols-outlined flex-shrink-0" data-icon="history">history</span>
-          <span className="sidebar-text sidebar-text-transition whitespace-nowrap">Riwayat Data</span>
+        
+        <NavLink 
+          to="/history" 
+          className={({ isActive }) => 
+            `flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 ${
+              isActive 
+                ? 'bg-blue-500/10 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 shadow-sm' 
+                : 'text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 dark:hover:bg-slate-800/50 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300'
+            }`
+          }
+          title="Riwayat Data"
+        >
+          <span className="material-symbols-outlined text-[24px]">history</span>
         </NavLink>
-        <NavLink to="/report" className={({ isActive }) => `flex items-center gap-3 transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item ${isActive ? 'bg-primary-container text-primary font-bold border-l-4 border-primary' : 'text-outline hover:bg-surface-container-low'}`}>
-          <span className="material-symbols-outlined flex-shrink-0" data-icon="assessment">analytics</span>
-          <span className="sidebar-text sidebar-text-transition whitespace-nowrap">Laporan</span>
+        
+        <NavLink 
+          to="/report" 
+          className={({ isActive }) => 
+            `flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 ${
+              isActive 
+                ? 'bg-blue-500/10 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 shadow-sm' 
+                : 'text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 dark:hover:bg-slate-800/50 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300'
+            }`
+          }
+          title="Laporan"
+        >
+          <span className="material-symbols-outlined text-[24px]">analytics</span>
         </NavLink>
-        <a href="#" className="flex items-center gap-3 text-outline hover:bg-surface-container-low transition-colors px-5 py-3 font-body-md text-body-md sidebar-nav-item">
-          <span className="material-symbols-outlined flex-shrink-0" data-icon="help">help</span>
-          <span className="sidebar-text sidebar-text-transition whitespace-nowrap">Dukungan</span>
-        </a>
       </nav>
       
-      <div className="px-5 mt-auto sidebar-btn-container flex">
-        <button className="w-full py-2 px-4 bg-primary text-on-primary rounded-DEFAULT font-label-sm text-label-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-          <span className="material-symbols-outlined text-[18px] flex-shrink-0">download</span>
-          <span className="export-text sidebar-text sidebar-text-transition whitespace-nowrap">Export Laporan</span>
+      {/* Bottom Actions */}
+      <div className="mt-auto flex flex-col gap-4 w-full px-4 items-center">
+        <a 
+          href="#" 
+          className="flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 dark:hover:bg-slate-800/50 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300"
+          title="Dukungan"
+        >
+          <span className="material-symbols-outlined text-[24px]">help</span>
+        </a>
+        <button 
+          className="flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-300 text-blue-500 dark:text-blue-400 hover:bg-blue-500/10 dark:bg-blue-900/30"
+          title="Export Laporan"
+        >
+          <span className="material-symbols-outlined text-[24px]">download</span>
         </button>
       </div>
     </aside>

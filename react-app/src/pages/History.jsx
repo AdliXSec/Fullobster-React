@@ -38,16 +38,16 @@ const History = () => {
 
   if (loading) {
     return (
-      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <main className="p-8 flex-1 flex justify-center items-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="p-container-margin flex-1 flex justify-center items-center h-full" id="main-content">
-        <div className="text-error bg-error-container p-4 rounded-lg">Error loading data: {error}</div>
+      <main className="p-8 flex-1 flex justify-center items-center h-full">
+        <div className="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 border border-rose-100 p-4 rounded-2xl">Error loading data: {error}</div>
       </main>
     );
   }
@@ -80,7 +80,6 @@ const History = () => {
   const totalItems = filteredRecords.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   
-  // Ensure current page is valid when data updates
   if (currentPage > totalPages && totalPages > 0) {
     setCurrentPage(totalPages);
   } else if (currentPage === 0 && totalPages > 0) {
@@ -92,19 +91,19 @@ const History = () => {
   const currentRecords = filteredRecords.slice(startIndex, endIndex);
 
   return (
-    <main className="p-container-margin flex-1" id="main-content">
+    <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 px-2">
         <div>
-          <h2 className="font-headline-lg text-headline-lg text-on-background">Riwayat Data Pemantauan</h2>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-1">Review historical sensor data and performance metrics.</p>
+          <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Riwayat Data Pemantauan</h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Review historical sensor data and performance metrics.</p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-surface-container-low text-on-surface border border-outline-variant py-2 px-4 rounded-lg font-label-sm text-label-sm flex items-center gap-2 hover:bg-surface-container transition-colors shadow-sm">
+          <button className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/80 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 hover:bg-white/80 py-2 px-4 rounded-full text-sm font-medium flex items-center gap-2 transition-all shadow-sm">
             <span className="material-symbols-outlined text-[18px]">picture_as_pdf</span>
             Download PDF
           </button>
-          <button className="bg-primary text-on-primary py-2 px-4 rounded-lg font-label-sm text-label-sm flex items-center gap-2 hover:bg-primary-container transition-colors shadow-sm">
+          <button className="bg-blue-500/10 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 py-2 px-4 rounded-full text-sm font-medium flex items-center gap-2 transition-all shadow-sm">
             <span className="material-symbols-outlined text-[18px]">csv</span>
             Download CSV
           </button>
@@ -112,159 +111,137 @@ const History = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-4 mb-container-margin border border-outline-variant/30 flex flex-wrap gap-4 items-center">
-        <div className="flex items-center gap-2 mr-4">
-          <span className="material-symbols-outlined text-outline">filter_list</span>
-          <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Filters</span>
+      <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/80 dark:border-slate-700/50 rounded-full p-2 mb-8 flex flex-wrap gap-4 items-center shadow-sm w-max max-w-full">
+        <div className="flex items-center gap-2 ml-4">
+          <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 text-sm">filter_list</span>
+          <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Filters</span>
         </div>
-        <div className="flex gap-2 bg-surface-container-low p-1 rounded-lg">
-          <button 
-            onClick={() => { setDateFilter('Semua Data'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-DEFAULT font-label-sm text-label-sm transition-colors ${dateFilter === 'Semua Data' ? 'bg-white shadow-sm text-on-surface border border-outline-variant/50' : 'hover:bg-white/50 text-outline'}`}>
-            Semua Data
-          </button>
-          <button 
-            onClick={() => { setDateFilter('7 Hari Terakhir'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-DEFAULT font-label-sm text-label-sm transition-colors ${dateFilter === '7 Hari Terakhir' ? 'bg-white shadow-sm text-on-surface border border-outline-variant/50' : 'hover:bg-white/50 text-outline'}`}>
-            7 Hari Terakhir
-          </button>
-          <button 
-            onClick={() => { setDateFilter('30 Hari Terakhir'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-DEFAULT font-label-sm text-label-sm transition-colors ${dateFilter === '30 Hari Terakhir' ? 'bg-white shadow-sm text-on-surface border border-outline-variant/50' : 'hover:bg-white/50 text-outline'}`}>
-            30 Hari Terakhir
-          </button>
-          <button 
-            onClick={() => { setDateFilter('Kustom'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-DEFAULT font-label-sm text-label-sm flex items-center gap-1 transition-colors ${dateFilter === 'Kustom' ? 'bg-white shadow-sm text-on-surface border border-outline-variant/50' : 'hover:bg-white/50 text-outline'}`}>
-            Kustom <span className="material-symbols-outlined text-[16px]">calendar_today</span>
-          </button>
+        
+        <div className="flex gap-1 bg-slate-100/50 dark:bg-slate-800/50 p-1 rounded-full">
+          {['Semua Data', '7 Hari Terakhir', '30 Hari Terakhir', 'Kustom'].map(filter => (
+            <button 
+              key={filter}
+              onClick={() => { setDateFilter(filter); setCurrentPage(1); }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-1 ${
+                dateFilter === filter 
+                ? 'bg-white dark:bg-slate-700 shadow-sm text-blue-600 dark:text-blue-400' 
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
+              }`}
+            >
+              {filter}
+              {filter === 'Kustom' && <span className="material-symbols-outlined text-[16px]">calendar_today</span>}
+            </button>
+          ))}
         </div>
-        <div className="h-6 w-px bg-outline-variant/50 hidden md:block"></div>
-        <div className="flex gap-2">
-          <label className="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
-            <input 
-              checked={columns.ph} 
-              onChange={() => setColumns(prev => ({...prev, ph: !prev.ph}))} 
-              className="text-primary rounded-sm focus:ring-primary border-outline" type="checkbox" />
-            <span className="font-label-sm text-label-sm text-on-surface">pH Air</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
-            <input 
-              checked={columns.tds} 
-              onChange={() => setColumns(prev => ({...prev, tds: !prev.tds}))} 
-              className="text-primary rounded-sm focus:ring-primary border-outline" type="checkbox" />
-            <span className="font-label-sm text-label-sm text-on-surface">TDS</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
-            <input 
-              checked={columns.suhu} 
-              onChange={() => setColumns(prev => ({...prev, suhu: !prev.suhu}))} 
-              className="text-primary rounded-sm focus:ring-primary border-outline" type="checkbox" />
-            <span className="font-label-sm text-label-sm text-on-surface">Suhu</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 hover:bg-surface-container transition-colors">
-            <input 
-              checked={columns.oksigen} 
-              onChange={() => setColumns(prev => ({...prev, oksigen: !prev.oksigen}))} 
-              className="text-primary rounded-sm focus:ring-primary border-outline" type="checkbox" />
-            <span className="font-label-sm text-label-sm text-on-surface">DO</span>
-          </label>
+        
+        <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden md:block"></div>
+        
+        <div className="flex gap-2 mr-2">
+          {Object.keys(columns).map(col => (
+            <label key={col} className={`flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-full transition-colors ${columns[col] ? 'bg-blue-50/50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}>
+              <input 
+                checked={columns[col]} 
+                onChange={() => setColumns(prev => ({...prev, [col]: !prev[col]}))} 
+                className="accent-blue-600 dark:accent-blue-400 rounded-sm w-3 h-3" type="checkbox" />
+              <span className="text-sm font-medium capitalize">{col === 'oksigen' ? 'DO' : col === 'suhu' ? 'Suhu' : col === 'ph' ? 'pH Air' : 'TDS'}</span>
+            </label>
+          ))}
         </div>
       </div>
 
       {/* Summary Section */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-container-margin">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {columns.ph && (
-          <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span className="material-symbols-outlined text-[100px] text-primary">water_drop</span>
-            </div>
-            <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary"></span> Rata-rata pH Air
+          <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/80 dark:border-slate-700/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] rounded-[24px] p-6 relative flex flex-col justify-between">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
+              <span className="material-symbols-outlined text-blue-400 text-lg">water_drop</span>
+              Rata-rata pH Air
             </h3>
-            <div className="font-display-metrics text-display-metrics text-on-surface">{avg_ph}</div>
-            <div className="font-label-sm text-label-sm text-outline mt-1">Normal Range: 6.5 - 8.5</div>
+            <div className="mt-4">
+              <div className="text-4xl font-light text-slate-800 dark:text-slate-100 tabular-nums">{avg_ph}</div>
+              <div className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-1">Normal Range: 6.5 - 8.5</div>
+            </div>
           </div>
         )}
         {columns.tds && (
-          <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span className="material-symbols-outlined text-[100px] text-primary">blur_on</span>
-            </div>
-            <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary"></span> Rata-rata TDS
+          <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/80 dark:border-slate-700/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] rounded-[24px] p-6 relative flex flex-col justify-between">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
+              <span className="material-symbols-outlined text-blue-400 text-lg">blur_on</span>
+              Rata-rata TDS
             </h3>
-            <div className="font-display-metrics text-display-metrics text-on-surface">{avg_tds} <span className="text-headline-md font-body-md text-outline">mg/L</span></div>
-            <div className="font-label-sm text-label-sm text-outline mt-1">Normal Range: &lt; 300</div>
+            <div className="mt-4">
+              <div className="text-4xl font-light text-slate-800 dark:text-slate-100 tabular-nums">{avg_tds} <span className="text-lg font-medium text-slate-400 dark:text-slate-500">mg/L</span></div>
+              <div className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-1">Normal Range: &lt; 300</div>
+            </div>
           </div>
         )}
         {columns.suhu && (
-          <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span className="material-symbols-outlined text-[100px] text-error">thermostat</span>
-            </div>
-            <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-error"></span> Rata-rata Suhu
+          <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/80 dark:border-slate-700/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] rounded-[24px] p-6 relative flex flex-col justify-between">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
+              <span className="material-symbols-outlined text-blue-400 text-lg">thermostat</span>
+              Rata-rata Suhu
             </h3>
-            <div className="font-display-metrics text-display-metrics text-on-surface">{avg_suhu} <span className="text-headline-md font-body-md text-outline">°C</span></div>
-            <div className="font-label-sm text-label-sm text-outline mt-1">Normal Range: 25.0 - 30.0</div>
+            <div className="mt-4">
+              <div className="text-4xl font-light text-slate-800 dark:text-slate-100 tabular-nums">{avg_suhu} <span className="text-lg font-medium text-slate-400 dark:text-slate-500">°C</span></div>
+              <div className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-1">Normal Range: 25.0 - 30.0</div>
+            </div>
           </div>
         )}
         {columns.oksigen && (
-          <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-card-padding border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <span className="material-symbols-outlined text-[100px] text-primary">bubble_chart</span>
-            </div>
-            <h3 className="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary"></span> Rata-rata DO
+          <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/80 dark:border-slate-700/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] rounded-[24px] p-6 relative flex flex-col justify-between">
+            <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
+              <span className="material-symbols-outlined text-blue-400 text-lg">bubble_chart</span>
+              Rata-rata DO
             </h3>
-            <div className="font-display-metrics text-display-metrics text-on-surface">{avg_oksigen} <span className="text-headline-md font-body-md text-outline">mg/L</span></div>
-            <div className="font-label-sm text-label-sm text-outline mt-1">Normal Range: &gt; 6.0</div>
+            <div className="mt-4">
+              <div className="text-4xl font-light text-slate-800 dark:text-slate-100 tabular-nums">{avg_oksigen} <span className="text-lg font-medium text-slate-400 dark:text-slate-500">mg/L</span></div>
+              <div className="text-xs font-medium text-slate-400 dark:text-slate-500 mt-1">Normal Range: &gt; 6.0</div>
+            </div>
           </div>
         )}
       </div>
 
       {/* Data Table Card */}
-      <div className="bg-white rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/30 overflow-hidden">
-        <div className="overflow-x-auto max-h-[600px]">
+      <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/80 dark:border-slate-700/50 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.05)] rounded-[32px] overflow-hidden flex flex-col">
+        <div className="p-8 overflow-x-auto">
           <table className="w-full text-left border-collapse">
-            <thead className="sticky top-0 bg-surface-container-lowest z-10 shadow-sm">
-              <tr className="border-b border-outline-variant/50">
-                <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Waktu</th>
-                {columns.ph && <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider transition-all">pH Air</th>}
-                {columns.tds && <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider transition-all">TDS (mg/L)</th>}
-                {columns.suhu && <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider transition-all">Suhu (°C)</th>}
-                {columns.oksigen && <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider transition-all">Oksigen (mg/L)</th>}
-                <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status</th>
-                <th className="p-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Actions</th>
+            <thead className="border-b border-slate-200 dark:border-slate-700/60">
+              <tr>
+                <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Waktu</th>
+                {columns.ph && <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">pH Air</th>}
+                {columns.tds && <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">TDS (mg/L)</th>}
+                {columns.suhu && <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Suhu (°C)</th>}
+                {columns.oksigen && <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Oksigen (mg/L)</th>}
+                <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Status</th>
+                <th className="pb-4 font-semibold text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-outline-variant/30 font-metric-unit text-metric-unit text-on-surface">
+            <tbody className="divide-y divide-slate-100/80 text-sm text-slate-700 dark:text-slate-200">
               {currentRecords.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="p-8 text-center text-outline font-body-md">Tidak ada data untuk filter yang dipilih.</td>
+                  <td colSpan="7" className="py-8 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500">Tidak ada data untuk filter yang dipilih.</td>
                 </tr>
               ) : (
                 currentRecords.map((row, index) => {
                   let statusBadge = "";
                   if (row.status === "Ideal" || row.status === "Kondisi Ideal") {
-                    statusBadge = <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e6f4ea] text-[#1e8e3e] border border-[#1e8e3e]/20">Ideal</span>;
+                    statusBadge = <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100/50">Ideal</span>;
                   } else if (row.status === "Bahaya" || row.status === "Kondisi Bahaya") {
-                    statusBadge = <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-error text-on-error border border-error/20">Bahaya</span>;
+                    statusBadge = <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100/50">Bahaya</span>;
                   } else {
-                    statusBadge = <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-error-container text-on-error-container border border-error/20">Perlu Perhatian</span>;
+                    statusBadge = <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border border-amber-100/50">Perlu Perhatian</span>;
                   }
 
                   return (
-                    <tr key={index} className="hover:bg-surface-container-low transition-colors">
-                      <td className="p-4 text-on-surface-variant font-body-md text-body-md">{row.timestamp}</td>
-                      {columns.ph && <td className={`p-4 transition-all ${row.ph < 6.5 || row.ph > 8.5 ? 'font-semibold text-error' : ''}`}>{row.ph}</td>}
-                      {columns.tds && <td className={`p-4 transition-all ${row.tds > 300 ? 'font-semibold text-error' : ''}`}>{row.tds}</td>}
-                      {columns.suhu && <td className={`p-4 transition-all ${row.suhu < 25.0 || row.suhu > 30.0 ? 'font-semibold text-error' : ''}`}>{row.suhu}</td>}
-                      {columns.oksigen && <td className={`p-4 transition-all ${row.oksigen < 6.0 ? 'font-semibold text-error' : ''}`}>{row.oksigen}</td>}
-                      <td className="p-4">{statusBadge}</td>
-                      <td className="p-4 text-right">
-                        <button className="text-outline hover:text-primary transition-colors p-1"><span className="material-symbols-outlined text-[20px]">more_vert</span></button>
+                    <tr key={index} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="py-4 text-slate-500 dark:text-slate-400 dark:text-slate-500">{row.timestamp}</td>
+                      {columns.ph && <td className={`py-4 ${row.ph < 6.5 || row.ph > 8.5 ? 'font-semibold text-rose-500 dark:text-rose-400' : ''}`}>{row.ph}</td>}
+                      {columns.tds && <td className={`py-4 ${row.tds > 300 ? 'font-semibold text-rose-500 dark:text-rose-400' : ''}`}>{row.tds}</td>}
+                      {columns.suhu && <td className={`py-4 ${row.suhu < 25.0 || row.suhu > 30.0 ? 'font-semibold text-rose-500 dark:text-rose-400' : ''}`}>{row.suhu}</td>}
+                      {columns.oksigen && <td className={`py-4 ${row.oksigen < 6.0 ? 'font-semibold text-rose-500 dark:text-rose-400' : ''}`}>{row.oksigen}</td>}
+                      <td className="py-4">{statusBadge}</td>
+                      <td className="py-4 text-right">
+                        <button className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300 transition-colors"><span className="material-symbols-outlined text-[20px]">more_vert</span></button>
                       </td>
                     </tr>
                   );
@@ -275,35 +252,49 @@ const History = () => {
         </div>
         
         {/* Pagination */}
-        <div className="border-t border-outline-variant/30 p-4 bg-surface-bright flex items-center justify-between">
-          <div className="font-label-sm text-label-sm text-outline">
-            Menampilkan <span className="font-semibold text-on-surface">{totalItems === 0 ? 0 : startIndex + 1}</span> hingga <span className="font-semibold text-on-surface">{endIndex}</span> dari <span className="font-semibold text-on-surface">{totalItems}</span> data
+        <div className="border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/30 px-8 py-4 flex items-center justify-between">
+          <div className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">
+            Menampilkan <span className="font-semibold text-slate-700 dark:text-slate-200">{totalItems === 0 ? 0 : startIndex + 1}</span> hingga <span className="font-semibold text-slate-700 dark:text-slate-200">{endIndex}</span> dari <span className="font-semibold text-slate-700 dark:text-slate-200">{totalItems}</span> data
           </div>
           <div className="flex gap-1">
             <button 
-              className="p-2 border border-outline-variant/50 rounded-DEFAULT text-outline hover:bg-surface-container-low disabled:opacity-50" 
+              className="p-1.5 rounded-full text-slate-400 dark:text-slate-500 hover:bg-slate-200/50 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300 disabled:opacity-30 transition-colors" 
               disabled={currentPage <= 1}
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             >
-              <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+              <span className="material-symbols-outlined text-[20px]">chevron_left</span>
             </button>
             
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <button 
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 rounded-DEFAULT font-label-sm text-label-sm ${currentPage === page ? 'bg-primary text-on-primary' : 'border border-outline-variant/50 text-on-surface hover:bg-surface-container-low'}`}
-              >
-                {page}
-              </button>
-            ))}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+              if (
+                page === 1 || 
+                page === totalPages || 
+                (page >= currentPage - 1 && page <= currentPage + 1)
+              ) {
+                return (
+                  <button 
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-colors ${currentPage === page ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:bg-slate-200/50'}`}
+                  >
+                    {page}
+                  </button>
+                );
+              } else if (
+                page === currentPage - 2 || 
+                page === currentPage + 2
+              ) {
+                return <span key={page} className="w-8 h-8 flex items-center justify-center text-slate-400 dark:text-slate-500">...</span>;
+              }
+              return null;
+            })}
             
             <button 
-              className="p-2 border border-outline-variant/50 rounded-DEFAULT text-outline hover:bg-surface-container-low disabled:opacity-50" 
+              className="p-1.5 rounded-full text-slate-400 dark:text-slate-500 hover:bg-slate-200/50 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-300 disabled:opacity-30 transition-colors" 
               disabled={currentPage >= totalPages || totalPages === 0}
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             >
-              <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+              <span className="material-symbols-outlined text-[20px]">chevron_right</span>
             </button>
           </div>
         </div>

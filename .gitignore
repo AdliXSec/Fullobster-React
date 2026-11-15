@@ -13,3 +13,8 @@ __pycache__/
 simulator.py
 sensor_data.db
 utils.py
+code*.png
+dashboard*.png
+hasil.txt
+history*.png
+report*.png

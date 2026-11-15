@@ -7,130 +7,82 @@
 }
 
 body {
-    background-color: #F8F9FB;
+    background-color: #f4f7fb;
+    color: #1e293b;
+    font-family: 'Outfit', sans-serif;
+    font-variant-numeric: tabular-nums;
+    overflow-x: hidden;
 }
 
-.chart-area-gradient {
-    background: linear-gradient(180deg, rgba(0, 61, 155, 0.1) 0%, rgba(0, 61, 155, 0) 100%);
+.dark body {
+    background-color: #020617; /* slate-950 */
+    color: #f1f5f9; /* slate-100 */
 }
 
-.sidebar-transition {
-    transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+html {
+    scroll-behavior: smooth;
 }
 
-.sidebar-text-transition {
-    transition: opacity 0.2s ease-in-out, width 0.3s ease-in-out;
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
 }
 
-@media (min-width: 768px) {
-    .sidebar-collapsed #sidebar {
-        width: 80px !important;
-    }
-
-    .sidebar-collapsed #main-wrapper {
-        margin-left: 80px !important;
-    }
-
-    .sidebar-collapsed .sidebar-text {
-        opacity: 0;
-        width: 0;
-        overflow: hidden;
-        display: none;
-    }
-
-    .sidebar-collapsed .logo-text {
-        opacity: 0;
-        width: 0;
-        overflow: hidden;
-        display: none;
-    }
-
-    .sidebar-collapsed .export-text {
-        display: none;
-    }
-
-    .sidebar-collapsed .sidebar-btn-container {
-        justify-content: center;
-        padding: 0;
-    }
-
-    .sidebar-collapsed .sidebar-nav-item {
-        justify-content: center;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .sidebar-collapsed .logo-container {
-        flex-direction: column;
-        gap: 16px;
-        padding: 0;
-        justify-content: center;
-    }
+.dark ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.4);
 }
 
-/* Animations from dashboard */
-@keyframes flow-animation {
+.glass-panel {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,1);
+}
+
+.dark .glass-panel {
+    background: rgba(15, 23, 42, 0.6); /* slate-900 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+@keyframes blob-float {
     0% {
-        stroke-dashoffset: 24;
+        transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
     }
     100% {
-        stroke-dashoffset: 0;
+        transform: translate(0px, 0px) scale(1);
     }
 }
 
-.flow-line {
-    stroke-dasharray: 12 12;
-    animation: flow-animation 1s linear infinite;
+.animate-blob {
+    animation: blob-float 10s infinite;
 }
 
-@keyframes packet-flow {
-    0% {
-        offset-distance: 0%;
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    90% {
-        opacity: 1;
-    }
-    100% {
-        offset-distance: 100%;
-        opacity: 0;
-    }
-}
-
-.data-packet {
-    offset-path: path('M 15% 50% L 50% 50%');
-    animation: packet-flow 2s linear infinite;
-}
-
-.data-packet-2 {
-    offset-path: path('M 50% 50% L 85% 50%');
-    animation: packet-flow 2s linear infinite;
-    animation-delay: 1s;
-}
-
-@keyframes pulse-node {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(0, 82, 204, 0.4);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(0, 82, 204, 0);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(0, 82, 204, 0);
-    }
-}
-
-.node-pulse {
-    animation: pulse-node 4s ease-in-out infinite;
-}
-
-.node-pulse-delayed {
-    animation: pulse-node 4s ease-in-out infinite;
+.animation-delay-2000 {
     animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
 }
